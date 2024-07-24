@@ -19,28 +19,28 @@ function App() {
   };
   return (
     <div className=" flex ">
-      <div className="side">
+      <div className=" min-w-fit p-5 h-fit m-2 ml-0 bg-zinc-100 rounded-lg flex flex-col items-start ">
         <ButtonComponent
           onClick={handleToggle}
           context="کار جدید"
           icon="add"
           className="sideBar"
         />
-        <ButtonComponent context="بیش نویس" icon="add" className="sideBar" />
+        <ButtonComponent context="پیش نویس" icon="draft" className="sideBar" />
         <ButtonComponent
           context="کارهای امروز"
-          icon="add"
+          icon="today"
           className="sideBar"
         />
-        <ButtonComponent context="همه کارها" icon="add" className="sideBar" />
+        <ButtonComponent context="همه کارها" icon="week" className="sideBar" />
         <hr class="border-t-2 border-gray-300 w-full max-w-md my-4" />
         <ButtonComponent context="پروژه های من" className="sideBar" />
-        <ButtonComponent context="شخصی" icon="add" className="sideBar" />
-        <ButtonComponent context="خانه" icon="add" className="sideBar" />
-        <ButtonComponent context="شغلی" icon="add" className="sideBar" />
-        <ButtonComponent context="ورزش" icon="add" className="sideBar" />
-        <ButtonComponent context="مطالعه" icon="add" className="sideBar" />
-        <ButtonComponent context="مناسبت" icon="add" className="sideBar" />
+        <ButtonComponent context="شخصی" icon="personal" className="sideBar" />
+        <ButtonComponent context="خانه" icon="home" className="sideBar" />
+        <ButtonComponent context="شغلی" icon="business" className="sideBar" />
+        <ButtonComponent context="ورزش" icon="sport" className="sideBar" />
+        <ButtonComponent context="مطالعه" icon="study" className="sideBar" />
+        <ButtonComponent context="مناسبت" icon="birthday" className="sideBar" />
       </div>
       <TaskListComponent tasks={tasks} deleteTask={handleDeleteTask} />
       <div className={isDisplayed ? "" : " hidden"}>
