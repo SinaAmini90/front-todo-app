@@ -13,7 +13,7 @@ export default function ButtonComponent({
   switch (className) {
     case "sideBar":
       classVlaueButtonTag =
-        "hover:scale-110 duration-200 whitespace-nowrap border-none  text-slate-900 font-bold py-2 px-4 rounded-lg ";
+        "hover:scale-110 duration-200 whitespace-nowrap border-none text-slate-900 font-bold py-2 px-4 rounded-lg ";
       break;
     case "action":
       classVlaueButtonTag =
@@ -21,7 +21,7 @@ export default function ButtonComponent({
       break;
     case "none":
       classVlaueButtonTag =
-        " cursor-default border-none whitespace-nowrap bg-white text-slate-900 font-bold py-2 px-4";
+        " cursor-default border-none rounded whitespace-nowrap bg-white text-slate-900 font-bold py-2";
       break;
   }
 
@@ -85,7 +85,8 @@ export default function ButtonComponent({
       alt: "checkmark",
     },
     back: {
-      src: "https://img.icons8.com/plasticine/96/back.png",
+      src: "https://img.icons8.com/pulsar-color/48/back.png",
+      // "https://img.icons8.com/plasticine/96/back.png",
       alt: "back",
     },
     clock: {
