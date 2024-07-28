@@ -35,7 +35,7 @@ function AddFormComponent({ onExit, onAddTask, classNameAdd }) {
     <div className={classVlaue + classNameAdd}>
       <div className="bg-white rounded-lg border m-6 p-6 w-fit">
         <ButtonComponent
-          context="خروج از فرم"
+          context="خروج"
           icon="exit"
           className="sideBar"
           onClick={onExit}
@@ -61,11 +61,6 @@ function AddFormComponent({ onExit, onAddTask, classNameAdd }) {
           </div>
           <div className="w-76 flex justify-between">
             <div className=" w-80">
-              <div className="p-4 flex justify-between">
-                <ButtonComponent className="action" context="امروز" />
-                <ButtonComponent className="action" context="فردا" />
-                <ButtonComponent className="action" context="این هفته" />
-              </div>
               <CalendarComponent />
               <div className="flex items-center  justify-around">
                 <ButtonComponent
