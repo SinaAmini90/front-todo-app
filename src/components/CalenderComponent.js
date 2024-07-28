@@ -1,23 +1,25 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import jalaali from "jalaali-js";
-import ListButtonComponent from "./ButtonComponent";
+import ButtonComponent from "./ButtonComponent";
 
 function CalendarComponent() {
+  const [deadLine, setDeadLine] = useState("");
+
   const now = new Date();
   const year = now.getFullYear();
   const month = now.getMonth() + 1;
 
   const jalaaliDate = jalaali.toJalaali(year, month, now.getDate());
-  const jalaaliYear = jalaaliDate.jy;
-  const jalaaliMonth = jalaaliDate.jm;
+  const [jalaaliYear, setJalaaliYear] = useState(jalaaliDate.jy);
+  const [jalaaliMonth, setJalaaliMonth] = useState(jalaaliDate.jm);
   const jalaaliDay = jalaaliDate.jd;
 
-  function getDayOfWeek(jy, jm, jd) {
+  function getDayOfWeak(jy, jm, jd) {
     const { gy, gm, gd } = jalaali.toGregorian(jy, jm, jd);
     const date = new Date(gy, gm - 1, gd); // Months are 0-based in JavaScript Date
-    const dayOfWeek = date.getDay();
-    const persianDayOfWeek = dayOfWeek + 1;
-    return persianDayOfWeek;
+    const dayOfWeak = date.getDay();
+    const persianDayOfWeak = dayOfWeak + 1;
+    return persianDayOfWeak;
   }
 
   const daysInMonth = jalaali.jalaaliMonthLength(jalaaliYear, jalaaliMonth);
@@ -26,15 +28,25 @@ function CalendarComponent() {
     (_, index) => index + 1
   );
 
-  const firstDayOfMonth = getDayOfWeek(jalaaliYear, jalaaliMonth, 1);
-  const lastDayOfMonth = getDayOfWeek(jalaaliYear, jalaaliMonth, daysInMonth);
+  const firstDayOfMonth = getDayOfWeak(jalaaliYear, jalaaliMonth, 1);
+  const lastDayOfMonth = getDayOfWeak(jalaaliYear, jalaaliMonth, daysInMonth);
   console.log(lastDayOfMonth);
-  for (let i = 0; i < firstDayOfMonth; i++) {
-    daysArray.unshift("");
+
+  if (firstDayOfMonth < 7) {
+    for (let i = 0; i < firstDayOfMonth; i++) {
+      daysArray.unshift("");
+    }
   }
-  for (let i = 0; i < 6 - lastDayOfMonth; i++) {
-    daysArray.push("");
+  if (lastDayOfMonth < 7) {
+    for (let i = 0; i < 6 - lastDayOfMonth; i++) {
+      daysArray.push("");
+    }
+  } else {
+    for (let i = 0; i < 6; i++) {
+      daysArray.push("");
+    }
   }
+
   const monthNames = [
     "فروردین",
     "اردیبهشت",
@@ -52,39 +64,69 @@ function CalendarComponent() {
   const dayNames = ["ش", "ی", "د", "س", "چ", "پ", "ج"];
   const monthName = monthNames[jalaaliMonth - 1];
 
+  const onClickPastMonth = () => {
+    setJalaaliMonth((prevState) => {
+      if (prevState > 1) {
+        return prevState - 1;
+      } else {
+        setJalaaliYear((prevYear) => prevYear - 1);
+        return 12;
+      }
+    });
+  };
+  const onClickNextMonth = () => {
+    setJalaaliMonth((prevState) => {
+      if (prevState < 12) {
+        return prevState + 1;
+      } else {
+        setJalaaliYear((prevYear) => prevYear + 1);
+        return 1;
+      }
+    });
+  };
+
   return (
     <div className="p-4">
+      <div className="p-4 flex justify-between">
+        <ButtonComponent className="action" context="امروز" />
+        <ButtonComponent className="action" context="فردا" />
+        <ButtonComponent className="action" context="این هفته" />
+      </div>
       <div className="flex items-center justify-between">
-        <ListButtonComponent
+        <ButtonComponent
           icon="back"
-          className="action"
-          classImgAdd=" rotate-180 ml-0 mt-0 "
+          className="none"
+          classImgAdd=" rotate-180 ml-0 mt-0 hover:scale-125 duration-200 "
+          onClick={onClickPastMonth}
         />
         <h2 className="text-l font-bold">
           {monthName} {jalaaliYear}
         </h2>
-        <ListButtonComponent
-          className="action"
+        <ButtonComponent
+          className="none"
           icon="back"
-          classImgAdd=" ml-0 mt-0"
+          classImgAdd=" ml-0 mt-0 hover:scale-125 duration-200"
+          onClick={onClickNextMonth}
         />
       </div>
       <div className="grid grid-cols-7 gap-2 w-72 h-50">
-        {dayNames.map((day) => (
-          <div
-            key={day}
-            className="border border-gray-300 p-2 text-center rounded"
+        {dayNames.map((dayName) => (
+          <ButtonComponent
+            key={dayName}
+            className="none"
+            classNameAdd=" flex items-center justify-around border border-gray-300 "
           >
-            {day}
-          </div>
+            {dayName}
+          </ButtonComponent>
         ))}
-        {daysArray.map((day) => (
-          <div
-            key={day}
-            className="border border-gray-300 p-2 text-center rounded"
+        {daysArray.map((dayNumber, index) => (
+          <ButtonComponent
+            key={index}
+            className="none"
+            classNameAdd=" flex items-center justify-around border border-gray-300 "
           >
-            {day}
-          </div>
+            {dayNumber}
+          </ButtonComponent>
         ))}
       </div>
     </div>
