@@ -23,10 +23,47 @@ function CalendarComponent() {
   }
 
   const daysInMonth = jalaali.jalaaliMonthLength(jalaaliYear, jalaaliMonth);
-  const daysArray = Array.from(
-    { length: daysInMonth },
-    (_, index) => index + 1
-  );
+  const blankDaysFirst = [];
+  const blankDaysLast = [];
+  let daysArrayBeforeToday = [];
+  let todayArray = [];
+  let daysArrayAfterToday = [];
+
+  if (jalaaliDate.jm === jalaaliMonth && jalaaliDate.jy === jalaaliYear) {
+    daysArrayBeforeToday = Array.from(
+      { length: jalaaliDay - 1 },
+      (_, index) => index + 1
+    );
+    todayArray = [jalaaliDay];
+    daysArrayAfterToday = Array.from(
+      { length: daysInMonth - jalaaliDay },
+      (_, index) => index + jalaaliDay + 1
+    );
+  } else {
+    function isBeforeToday() {
+      if (jalaaliDate.jy < jalaaliYear) return true;
+      if (jalaaliDate.jy > jalaaliYear) return false;
+      if (jalaaliDate.jm < jalaaliMonth) return true;
+      if (jalaaliDate.jm < jalaaliMonth) return false;
+    }
+
+    if (!isBeforeToday()) {
+      daysArrayBeforeToday = Array.from(
+        { length: daysInMonth },
+        (_, index) => index + 1
+      );
+      daysArrayAfterToday = [];
+    }
+    if (isBeforeToday()) {
+      daysArrayAfterToday = Array.from(
+        { length: daysInMonth },
+        (_, index) => index + 1
+      );
+      daysArrayBeforeToday = [];
+    }
+  }
+  console.log(daysArrayAfterToday);
+  console.log(daysArrayBeforeToday);
 
   const firstDayOfMonth = getDayOfWeak(jalaaliYear, jalaaliMonth, 1);
   const lastDayOfMonth = getDayOfWeak(jalaaliYear, jalaaliMonth, daysInMonth);
@@ -34,16 +71,17 @@ function CalendarComponent() {
 
   if (firstDayOfMonth < 7) {
     for (let i = 0; i < firstDayOfMonth; i++) {
-      daysArray.unshift("");
+      blankDaysFirst.unshift("");
     }
   }
+
   if (lastDayOfMonth < 7) {
     for (let i = 0; i < 6 - lastDayOfMonth; i++) {
-      daysArray.push("");
+      blankDaysLast.push("");
     }
   } else {
     for (let i = 0; i < 6; i++) {
-      daysArray.push("");
+      blankDaysLast.push("");
     }
   }
 
@@ -114,16 +152,52 @@ function CalendarComponent() {
           <ButtonComponent
             key={dayName}
             className="none"
-            classNameAdd=" flex items-center justify-around border border-gray-300 "
+            classNameAdd="  rounded-full flex items-center justify-around h-6"
           >
             {dayName}
           </ButtonComponent>
         ))}
-        {daysArray.map((dayNumber, index) => (
+        {blankDaysFirst.map((dayNumber, index) => (
           <ButtonComponent
             key={index}
             className="none"
-            classNameAdd=" flex items-center justify-around border border-gray-300 "
+            classNameAdd=" text-opacity-10 flex items-center justify-around border border-gray-300 "
+          >
+            {dayNumber}
+          </ButtonComponent>
+        ))}
+        {daysArrayBeforeToday.map((dayNumber, index) => (
+          <ButtonComponent
+            key={index}
+            className="none"
+            classNameAdd=" text-opacity-10 flex items-center justify-around border border-gray-300 "
+          >
+            {dayNumber}
+          </ButtonComponent>
+        ))}
+        {todayArray.map((dayNumber, index) => (
+          <ButtonComponent
+            key={index}
+            className="none"
+            classNameAdd=" flex items-center justify-around border border-red-500 "
+          >
+            {dayNumber}
+          </ButtonComponent>
+        ))}
+        {daysArrayAfterToday.map((dayNumber, index) => (
+          <ButtonComponent
+            key={index}
+            className="none"
+            classNameAdd=" flex items-center justify-around border border-gray-500"
+          >
+            {dayNumber}
+          </ButtonComponent>
+        ))}
+        {blankDaysLast.map((dayNumber, index) => (
+          <ButtonComponent
+            key={index}
+            className="none"
+            classNameAdd=" text-opacity-10 flex items-center justify-around border border-gray-300 "
           >
             {dayNumber}
           </ButtonComponent>
