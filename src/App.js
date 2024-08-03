@@ -29,6 +29,7 @@ function App() {
 
   const handleAddTask = (taskData) => {
     setTasks([...tasks, taskData]);
+    setIsDisplayed((prevState) => !prevState);
   };
   const handleToggle = () => {
     setIsDisplayed((prevState) => !prevState);
