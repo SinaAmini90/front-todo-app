@@ -1,14 +1,22 @@
 // import "../App.css";
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import InputComponent from "./InputComponent";
 import CalendarComponent from "./CalenderComponent";
 import ButtonComponent from "./ButtonComponent";
 import ClockComponent from "./ClockComponent";
-
+import { TimeContext } from "../store/time-context.js";
 function AddFormComponent({ onExit, onAddTask, classNameAdd }) {
+  const { deadLineDate, deadLineTime, setDeadLineDate, setDeadLineTime } =
+    useContext(TimeContext);
+  const [date, setDate] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isDisplayed, setIsDisplayed] = useState(false);
+  // useEffect(() => {
+  //   console.log("description", description);
+  //   setDescription(() => deadLineDate + description);
+  //   console.log("descriptionnew", description);
+  // }, [deadLineDate]);
   const handleToggle = () => {
     setIsDisplayed((prevState) => !prevState);
   };
@@ -19,11 +27,15 @@ function AddFormComponent({ onExit, onAddTask, classNameAdd }) {
     const newTask = {
       id: Date.now(),
       title: title,
-      description: description,
+      description: `${deadLineDate && " تاریخ اتمام کار:"}${deadLineDate}${
+        deadLineTime && "ساعت: "
+      }${deadLineTime}${description}`,
     };
     onAddTask(newTask);
     setTitle("");
     setDescription("");
+    setDeadLineDate("");
+    setDeadLineTime("");
   };
 
   const handleCancel = () => {
