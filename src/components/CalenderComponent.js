@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import jalaali from "jalaali-js";
 import ButtonComponent from "./ButtonComponent";
+import { TimeContext } from "../store/time-context";
 
-function CalendarComponent() {
+function CalendarComponent(onClick) {
   const [deadLine, setDeadLine] = useState("");
 
   const now = new Date();
@@ -62,12 +63,8 @@ function CalendarComponent() {
       daysArrayBeforeToday = [];
     }
   }
-  console.log(daysArrayAfterToday);
-  console.log(daysArrayBeforeToday);
-
   const firstDayOfMonth = getDayOfWeak(jalaaliYear, jalaaliMonth, 1);
   const lastDayOfMonth = getDayOfWeak(jalaaliYear, jalaaliMonth, daysInMonth);
-  console.log(lastDayOfMonth);
 
   if (firstDayOfMonth < 7) {
     for (let i = 0; i < firstDayOfMonth; i++) {
@@ -122,13 +119,17 @@ function CalendarComponent() {
       }
     });
   };
+  // const onClickHandler = () => {
+  //   console.log("dayNumber");
+  // };
 
+  const { setDeadLineDate, setDeadLineTime } = useContext(TimeContext);
   return (
     <div className="p-4">
       <div className="p-4 flex justify-between">
-        <ButtonComponent className="action" context="امروز" />
-        <ButtonComponent className="action" context="فردا" />
-        <ButtonComponent className="action" context="این هفته" />
+        <ButtonComponent className="action" context="امروز" type="button" />
+        <ButtonComponent className="action" context="فردا" type="button" />
+        <ButtonComponent className="action" context="این هفته" type="button" />
       </div>
       <div className="flex items-center justify-between">
         <ButtonComponent
@@ -136,6 +137,7 @@ function CalendarComponent() {
           className="none"
           classImgAdd=" rotate-180 ml-0 mt-0 hover:scale-125 duration-200 "
           onClick={onClickPastMonth}
+          type="button"
         />
         <h2 className="text-l font-bold">
           {monthName} {jalaaliYear}
@@ -145,12 +147,14 @@ function CalendarComponent() {
           icon="back"
           classImgAdd=" ml-0 mt-0 hover:scale-125 duration-200"
           onClick={onClickNextMonth}
+          type="button"
         />
       </div>
       <div className="grid grid-cols-7 gap-2 w-72 h-50">
         {dayNames.map((dayName) => (
           <ButtonComponent
             key={dayName}
+            type="button"
             className="none"
             classNameAdd="  rounded-full flex items-center justify-around h-6"
           >
@@ -160,6 +164,7 @@ function CalendarComponent() {
         {blankDaysFirst.map((dayNumber, index) => (
           <ButtonComponent
             key={index}
+            type="button"
             className="none"
             classNameAdd=" text-opacity-10 flex items-center justify-around border border-gray-300 "
           >
@@ -169,6 +174,7 @@ function CalendarComponent() {
         {daysArrayBeforeToday.map((dayNumber, index) => (
           <ButtonComponent
             key={index}
+            type="button"
             className="none"
             classNameAdd=" text-opacity-10 flex items-center justify-around border border-gray-300 "
           >
@@ -178,8 +184,12 @@ function CalendarComponent() {
         {todayArray.map((dayNumber, index) => (
           <ButtonComponent
             key={index}
+            onClick={() => {
+              setDeadLineDate(dayNumber + monthName + jalaaliYear);
+            }}
+            type="button"
             className="none"
-            classNameAdd=" flex items-center justify-around border border-red-500 "
+            classNameAdd=" hover:scale-110 duration-200 flex items-center justify-around border border-red-500 "
           >
             {dayNumber}
           </ButtonComponent>
@@ -187,8 +197,13 @@ function CalendarComponent() {
         {daysArrayAfterToday.map((dayNumber, index) => (
           <ButtonComponent
             key={index}
+            onClick={() => {
+              setDeadLineDate(dayNumber + monthName + jalaaliYear);
+              console.log("first");
+            }}
+            type="button"
             className="none"
-            classNameAdd=" flex items-center justify-around border border-gray-500"
+            classNameAdd=" hover:scale-110 duration-200 flex items-center justify-around border border-gray-500 w-full"
           >
             {dayNumber}
           </ButtonComponent>
@@ -196,6 +211,7 @@ function CalendarComponent() {
         {blankDaysLast.map((dayNumber, index) => (
           <ButtonComponent
             key={index}
+            type="button"
             className="none"
             classNameAdd=" text-opacity-10 flex items-center justify-around border border-gray-300 "
           >
