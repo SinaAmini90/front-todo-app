@@ -5,30 +5,40 @@ import CalendarComponent from "./CalenderComponent";
 import ButtonComponent from "./ButtonComponent";
 import ClockComponent from "./ClockComponent";
 import { TimeContext } from "../store/time-context.js";
+
 function AddFormComponent({ onExit, onAddTask, classNameAdd }) {
   const { deadLineDate, deadLineTime, setDeadLineDate, setDeadLineTime } =
     useContext(TimeContext);
+  const [hour, setHour] = useState("00");
+  const [minute, setMinute] = useState("00");
   const [date, setDate] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isDisplayed, setIsDisplayed] = useState(false);
-  // useEffect(() => {
-  //   console.log("description", description);
-  //   setDescription(() => deadLineDate + description);
-  //   console.log("descriptionnew", description);
-  // }, [deadLineDate]);
+
+  useEffect(() => {
+    setDeadLineTime(() => hour + ":" + minute);
+  }, [hour]);
+  useEffect(() => {
+    setDeadLineTime(() => hour + ":" + minute);
+  }, [minute]);
+
   const handleToggle = () => {
     setIsDisplayed((prevState) => !prevState);
   };
   let classVlaue =
     " fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center ";
   const handleSubmit = (event) => {
+    deadLineTime == "00:00"
+      ? setDeadLineTime(() => null)
+      : console.log(deadLineTime);
+    console.log(deadLineTime);
     event.preventDefault();
     const newTask = {
       id: Date.now(),
       title: title,
       description: `${deadLineDate && " تاریخ اتمام کار:"}${deadLineDate}${
-        deadLineTime && "ساعت: "
+        deadLineTime && "ساعت اتمام کار: "
       }${deadLineTime}${description}`,
     };
     onAddTask(newTask);
@@ -80,7 +90,19 @@ function AddFormComponent({ onExit, onAddTask, classNameAdd }) {
                   icon="clock"
                   className="none"
                 />
-                <ClockComponent />
+                <div className="flex align-middle justify-center gap-2">
+                  <InputComponent
+                    value={minute}
+                    onChange={(e) => setMinute(e.target.value)}
+                    context="00"
+                  />
+                  <p>:</p>
+                  <InputComponent
+                    value={hour}
+                    onChange={(e) => setHour(e.target.value)}
+                    context="24"
+                  />
+                </div>
               </div>
             </div>
             <div className=" w-80">
@@ -90,7 +112,11 @@ function AddFormComponent({ onExit, onAddTask, classNameAdd }) {
                   icon="reminder"
                   className="none"
                 />
-                <ClockComponent />
+                <div className="flex align-middle justify-center gap-2">
+                  <InputComponent context="00" />
+                  <p>:</p>
+                  <InputComponent context="24" />
+                </div>
                 <span>قبل</span>
               </div>
               <div className="flex items-center  justify-around">
