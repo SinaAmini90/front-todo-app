@@ -5,6 +5,7 @@ import { TimeContext } from "../store/time-context";
 
 function CalendarComponent(onClick) {
   const [deadLine, setDeadLine] = useState("");
+  const [selectedDate, setSelectedDate] = useState(null);
 
   const now = new Date();
   const year = now.getFullYear();
@@ -97,9 +98,36 @@ function CalendarComponent(onClick) {
     "اسفند",
   ];
   const dayNames = ["ش", "ی", "د", "س", "چ", "پ", "ج"];
-  const monthName = monthNames[jalaaliMonth - 1];
+  const monthName = monthNames[jalaaliMonth - 1]; ///////////////////////////////////////////////
+  const onClickToday = () => {
+    setSelectedDate(jalaaliDay);
+    setJalaaliMonth(jalaaliDate.jm);
+    setJalaaliYear(jalaaliDate.jy);
+    setDeadLineDate(jalaaliDay + monthName + jalaaliYear);
+  };
+  const onClickTomarrow = () => {
+    const tomarrow = jalaaliDay + 1;
+    setSelectedDate(tomarrow);
+    setJalaaliMonth(jalaaliDate.jm);
+    setJalaaliYear(jalaaliDate.jy);
+    setDeadLineDate(tomarrow + monthName + jalaaliYear);
+  };
+  const onClickWeakend = () => {
+    const today = getDayOfWeak(jalaaliDate.jy, jalaaliDate.jm, jalaaliDay);
+    let weakend = 0;
+    if (today < 7) {
+      weakend = jalaaliDay - today + 6;
+    } else {
+      weakend = jalaaliDay + 6;
+    }
+    setSelectedDate(weakend);
+    setJalaaliMonth(jalaaliDate.jm);
+    setJalaaliYear(jalaaliDate.jy);
+    setDeadLineDate(weakend + monthName + jalaaliYear);
+  };
 
   const onClickPastMonth = () => {
+    setSelectedDate(null);
     setJalaaliMonth((prevState) => {
       if (prevState > 1) {
         return prevState - 1;
@@ -110,6 +138,7 @@ function CalendarComponent(onClick) {
     });
   };
   const onClickNextMonth = () => {
+    setSelectedDate(null);
     setJalaaliMonth((prevState) => {
       if (prevState < 12) {
         return prevState + 1;
@@ -119,17 +148,29 @@ function CalendarComponent(onClick) {
       }
     });
   };
-  // const onClickHandler = () => {
-  //   console.log("dayNumber");
-  // };
-
+  const [classNameClick, setClassNameClick] = useState("");
   const { setDeadLineDate, setDeadLineTime } = useContext(TimeContext);
   return (
     <div className="p-4">
       <div className="p-4 flex justify-between">
-        <ButtonComponent className="action" context="امروز" type="button" />
-        <ButtonComponent className="action" context="فردا" type="button" />
-        <ButtonComponent className="action" context="این هفته" type="button" />
+        <ButtonComponent
+          className="action"
+          context="امروز"
+          type="button"
+          onClick={onClickToday}
+        />
+        <ButtonComponent
+          className="action"
+          context="فردا"
+          type="button"
+          onClick={onClickTomarrow}
+        />
+        <ButtonComponent
+          className="action"
+          context="آخر هفته"
+          type="button"
+          onClick={onClickWeakend}
+        />
       </div>
       <div className="flex items-center justify-between">
         <ButtonComponent
@@ -186,10 +227,13 @@ function CalendarComponent(onClick) {
             key={index}
             onClick={() => {
               setDeadLineDate(dayNumber + monthName + jalaaliYear);
+              setSelectedDate(dayNumber);
             }}
             type="button"
             className="none"
-            classNameAdd=" hover:scale-110 duration-200 flex items-center justify-around border border-red-500 "
+            classNameAdd={` hover:scale-110 duration-200 flex items-center justify-around outline outline-1 outline-red-500 w-full ${
+              selectedDate === dayNumber ? " bg-blue-300" : ""
+            }`}
           >
             {dayNumber}
           </ButtonComponent>
@@ -199,11 +243,13 @@ function CalendarComponent(onClick) {
             key={index}
             onClick={() => {
               setDeadLineDate(dayNumber + monthName + jalaaliYear);
-              console.log("first");
+              setSelectedDate(dayNumber);
             }}
             type="button"
             className="none"
-            classNameAdd=" hover:scale-110 duration-200 flex items-center justify-around border border-gray-500 w-full"
+            classNameAdd={` hover:scale-110  duration-200 flex items-center justify-around outline outline-1 w-full ${
+              selectedDate === dayNumber ? "bg-blue-300" : ""
+            }`}
           >
             {dayNumber}
           </ButtonComponent>
