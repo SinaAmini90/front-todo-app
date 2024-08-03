@@ -1,6 +1,7 @@
 import React, { Children } from "react";
 
 export default function ButtonComponent({
+  type,
   context,
   icon,
   onClick,
@@ -20,8 +21,8 @@ export default function ButtonComponent({
         "hover:scale-110 duration-200 whitespace-nowrap bg-white hover:bg-slate-200 text-slate-900 font-bold py-2 px-4 rounded-lg shadow-md";
       break;
     case "none":
-      classVlaueButtonTag =
-        " cursor-default border-none rounded whitespace-nowrap bg-white text-slate-900 font-bold py-2";
+      classVlaueButtonTag = //cursor-default
+        " cursor-default border-none rounded whitespace-nowrap text-slate-900 font-bold px-2 py-2";
       break;
   }
 
@@ -108,7 +109,11 @@ export default function ButtonComponent({
   };
   return (
     <div className={classVlaue + classNameAdd}>
-      <button className={classVlaueButtonTag + " bg-inherit"} onClick={onClick}>
+      <button
+        className={classVlaueButtonTag + " bg-inherit"}
+        onClick={onClick}
+        type={type}
+      >
         {icon && (
           <img
             className={
