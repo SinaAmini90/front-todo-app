@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import ButtonComponent from "./ButtonComponent.js";
+import { TimeContext } from "../store/time-context.js";
 
 function TaskListComponent({ tasks, deleteTask }) {
   const colors = [
-    "bg-red-100",
-    "bg-green-100",
-    "bg-blue-100",
-    "bg-yellow-100",
-    "bg-purple-100",
+    "bg-red-100", //high 0
+    "bg-green-100", //low 1
+    "bg-blue-100", //
+    "bg-yellow-100", //mediom 3
+    "bg-purple-100", //defalt 4
     "bg-pink-100",
     "bg-indigo-100",
     "bg-teal-100",
@@ -22,19 +23,20 @@ function TaskListComponent({ tasks, deleteTask }) {
     "bg-teal-200",
     "bg-orange-200",
   ];
-  const getRandomColor = () => {
-    return colors[Math.floor(Math.random() * colors.length)];
-  };
-  const [taskColors, setTaskColors] = useState({});
+
+  const initialColors = [];
+  const [taskColors, setTaskColors] = useState([]);
+
   useEffect(() => {
-    const initialColors = {};
+    let i = 0;
     tasks.forEach((task) => {
-      initialColors[task.id] =
-        colors[Math.floor(Math.random() * colors.length)];
+      initialColors[i] = colors[Math.floor(Math.random() * colors.length)];
+      i += 1;
     });
     setTaskColors(initialColors);
   }, [tasks]);
 
+  // two type of layout for todos list.
   const [liTagClass, setliTagClass] = useState(true);
   function flexTypeHandler() {
     setliTagClass((prevState) => !prevState);
@@ -48,6 +50,7 @@ function TaskListComponent({ tasks, deleteTask }) {
       liTagClassAdd = " max-w-2xl w-full items-center";
       break;
   }
+
   return (
     <div className="min-w-96 w-full p-5 m-2 bg-zinc-50 rounded-lg ">
       <div className="flex justify-between">
@@ -58,13 +61,11 @@ function TaskListComponent({ tasks, deleteTask }) {
         />
       </div>
       <ul className=" flex flex-wrap gap-4 ">
+        {console.log(tasks)}
         {tasks.map((task) => (
           <li
             key={task.id}
-            className={
-              `flex ${taskColors[task.id]} p-4 rounded-lg shadow-md ` +
-              liTagClassAdd
-            }
+            className={`flex ${colors[4]} p-4 rounded-lg shadow-md ${liTagClassAdd}`}
           >
             <div className="flex-grow overflow-hidden w-9/12">
               <h3 className="text-sm font-semibold mb-1 truncate">
