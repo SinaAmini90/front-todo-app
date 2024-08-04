@@ -1,5 +1,5 @@
 // import "../App.css";
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import InputComponent from "./InputComponent";
 import CalendarComponent from "./CalenderComponent";
 import ButtonComponent from "./ButtonComponent";
@@ -23,19 +23,28 @@ function AddFormComponent({ onExit, onAddTask, classNameAdd }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isDisplayed, setIsDisplayed] = useState(false);
+  const [isFirstRender, setIsFirstRender] = useState(true);
 
+  //this two useEffect help together to wont run in first rendering
   useEffect(() => {
-    setDeadLineTime(() => hour + ":" + minute);
-  }, [hour]);
+    if (!isFirstRender) {
+      setDeadLineTime(`${hour}:${minute}`);
+    }
+  }, [hour, minute]);
   useEffect(() => {
-    setDeadLineTime(() => hour + ":" + minute);
-  }, [minute]);
-  useEffect(() => {
-    setReminderTime(() => reminderHour + ":" + reminderMinute);
-  }, [reminderHour]);
-  useEffect(() => {
-    setReminderTime(() => reminderHour + ":" + reminderMinute);
-  }, [reminderMinute]);
+    if (isFirstRender) {
+      setIsFirstRender(false);
+    } else {
+      setReminderTime(`${reminderHour}:${reminderMinute}`);
+    }
+  }, [reminderHour, reminderHour]);
+
+  // useEffect(() => {
+  //   setReminderTime(() => reminderHour + ":" + reminderMinute);
+  // }, [reminderHour]);
+  // useEffect(() => {
+  //   setReminderTime(() => reminderHour + ":" + reminderMinute);
+  // }, [reminderMinute]);
 
   const handleToggle = () => {
     setIsDisplayed((prevState) => !prevState);
@@ -43,17 +52,11 @@ function AddFormComponent({ onExit, onAddTask, classNameAdd }) {
   let classVlaue =
     " fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center ";
   const handleSubmit = (event) => {
-    console.log(deadLineTime);
-    console.log("first");
+    event.preventDefault();
+
     deadLineTime === "00:00" && setDeadLineTime(() => "");
     reminderTime === "00:00" && setReminderTime(() => "");
-    console.log("second");
-    console.log(deadLineTime);
-    const timeout = 2000;
-    setTimeout(() => {
-      console.log(deadLineTime);
-    }, timeout);
-    event.preventDefault();
+
     const newTask = {
       id: Date.now(),
       title: `${deadLineDate && " آخرین فرصت:"}${deadLineDate}${
