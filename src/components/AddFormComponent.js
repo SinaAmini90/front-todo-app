@@ -36,10 +36,10 @@ function AddFormComponent({ onExit, onAddTask, classNameAdd }) {
     event.preventDefault();
     const newTask = {
       id: Date.now(),
-      title: title,
-      description: `${deadLineDate && " تاریخ اتمام کار:"}${deadLineDate}${
+      title: `${deadLineDate && " آخرین فرصت:"}${deadLineDate}${
         deadLineTime && "ساعت اتمام کار: "
-      }${deadLineTime}${description}`,
+      }${deadLineTime}${title}`,
+      description: `${description}`,
     };
     onAddTask(newTask);
     setTitle("");
