@@ -7,10 +7,18 @@ import ClockComponent from "./ClockComponent";
 import { TimeContext } from "../store/time-context.js";
 
 function AddFormComponent({ onExit, onAddTask, classNameAdd }) {
-  const { deadLineDate, deadLineTime, setDeadLineDate, setDeadLineTime } =
-    useContext(TimeContext);
+  const {
+    deadLineDate,
+    deadLineTime,
+    setDeadLineDate,
+    setDeadLineTime,
+    reminderTime,
+    setReminderTime,
+  } = useContext(TimeContext);
   const [hour, setHour] = useState("00");
   const [minute, setMinute] = useState("00");
+  const [reminderHour, setReminderHour] = useState("00");
+  const [reminderMinute, setReminderMinute] = useState("00");
   const [date, setDate] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -22,6 +30,12 @@ function AddFormComponent({ onExit, onAddTask, classNameAdd }) {
   useEffect(() => {
     setDeadLineTime(() => hour + ":" + minute);
   }, [minute]);
+  useEffect(() => {
+    setReminderTime(() => reminderHour + ":" + reminderMinute);
+  }, [reminderHour]);
+  useEffect(() => {
+    setReminderTime(() => reminderHour + ":" + reminderMinute);
+  }, [reminderMinute]);
 
   const handleToggle = () => {
     setIsDisplayed((prevState) => !prevState);
@@ -29,17 +43,25 @@ function AddFormComponent({ onExit, onAddTask, classNameAdd }) {
   let classVlaue =
     " fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center ";
   const handleSubmit = (event) => {
-    deadLineTime == "00:00"
-      ? setDeadLineTime(() => null)
-      : console.log(deadLineTime);
     console.log(deadLineTime);
+    console.log("first");
+    deadLineTime === "00:00" && setDeadLineTime(() => "");
+    reminderTime === "00:00" && setReminderTime(() => "");
+    console.log("second");
+    console.log(deadLineTime);
+    const timeout = 2000;
+    setTimeout(() => {
+      console.log(deadLineTime);
+    }, timeout);
     event.preventDefault();
     const newTask = {
       id: Date.now(),
       title: `${deadLineDate && " آخرین فرصت:"}${deadLineDate}${
         deadLineTime && "ساعت اتمام کار: "
       }${deadLineTime}${title}`,
-      description: `${description}`,
+      description: `${reminderTime && "یادآوری: "}${reminderTime} ${
+        reminderTime && "قبل"
+      } ${description}`,
     };
     onAddTask(newTask);
     setTitle("");
@@ -113,9 +135,17 @@ function AddFormComponent({ onExit, onAddTask, classNameAdd }) {
                   className="none"
                 />
                 <div className="flex align-middle justify-center gap-2">
-                  <InputComponent context="00" />
+                  <InputComponent
+                    value={reminderMinute}
+                    onChange={(e) => setReminderMinute(e.target.value)}
+                    context="00"
+                  />
                   <p>:</p>
-                  <InputComponent context="24" />
+                  <InputComponent
+                    value={reminderHour}
+                    onChange={(e) => setReminderHour(e.target.value)}
+                    context="00"
+                  />
                 </div>
                 <span>قبل</span>
               </div>
