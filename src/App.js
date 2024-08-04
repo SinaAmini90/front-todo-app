@@ -6,11 +6,14 @@ import ButtonComponent from "./components/ButtonComponent.js";
 import { TimeContext } from "./store/time-context.js";
 
 function App() {
+  const [reminderTime, setReminderTime] = useState("");
   const [deadLineDate, setDeadLineDate] = useState("");
   const [deadLineTime, setDeadLineTime] = useState("");
   const [tasks, setTasks] = useState([]);
   const [isDisplayed, setIsDisplayed] = useState(false);
-
+  const setReminderTimeHandler = (time) => {
+    setReminderTime(time);
+  };
   const setDeadLineDateHandler = (date) => {
     setDeadLineDate(date);
   };
@@ -18,6 +21,8 @@ function App() {
     setDeadLineTime(time);
   };
   const timeContext = {
+    reminderTime,
+    setReminderTime: setReminderTimeHandler,
     deadLineDate,
     setDeadLineDate: setDeadLineDateHandler,
     deadLineTime,

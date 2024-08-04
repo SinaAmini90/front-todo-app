@@ -5,4 +5,6 @@ export const TimeContext = createContext({
   setDeadLineDate: () => {},
   deadLineTime: "",
   setDeadLineTime: () => {},
+  reminderTime: "",
+  setReminderTime: () => {},
 });
