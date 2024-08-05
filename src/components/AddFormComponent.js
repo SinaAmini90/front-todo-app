@@ -40,6 +40,7 @@ function AddFormComponent({ onExit, onAddTask, classNameAdd }) {
     }
   }, [reminderHour, reminderHour]);
 
+  // to get diffrent color for tasks base type of priority
   const lowPriorityHandler = () => {
     setPriority("low");
   };
@@ -63,9 +64,9 @@ function AddFormComponent({ onExit, onAddTask, classNameAdd }) {
 
     const newTask = {
       id: Date.now(),
-      title: `${deadLineDate && " آخرین فرصت:"}${deadLineDate}${
-        deadLineTime && "ساعت اتمام کار: "
-      }${deadLineTime}${title}`,
+      title: `${title}${deadLineDate && " _ "}${deadLineDate}${
+        deadLineTime && " _ "
+      }${deadLineTime}`,
       description: `${reminderTime && "یادآوری: "}${reminderTime} ${
         reminderTime && "قبل"
       } ${description}`,

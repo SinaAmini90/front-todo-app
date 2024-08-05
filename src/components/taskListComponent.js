@@ -72,7 +72,7 @@ function TaskListComponent({ tasks, deleteTask }) {
           >
             <div className="flex-grow overflow-hidden w-9/12">
               <h3 className="text-sm font-semibold mb-1 truncate">
-                عنوان کار: {task.title}
+                {task.title}
               </h3>
               <p className="text-gray-600 text-sm break-words truncate">
                 توضیحات: {task.description}
