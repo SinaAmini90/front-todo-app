@@ -18,7 +18,7 @@ export default function ButtonComponent({
       break;
     case "action":
       classVlaueButtonTag =
-        "hover:scale-110 duration-200 whitespace-nowrap bg-white hover:bg-slate-200 text-slate-900 font-bold py-2 px-4 rounded-lg shadow-md";
+        " hover:scale-110 duration-200 whitespace-nowrap text-slate-900 font-bold py-2 px-4 rounded-lg shadow-md";
       break;
     case "none":
       classVlaueButtonTag = //cursor-default
