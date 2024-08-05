@@ -2,7 +2,7 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 import InputComponent from "./InputComponent";
 import CalendarComponent from "./CalenderComponent";
-import ButtonComponent from "./ButtonComponent";
+import ButtonComponent from "./ButtonComponent.js";
 import ClockComponent from "./ClockComponent";
 import { TimeContext } from "../store/time-context.js";
 
@@ -24,6 +24,7 @@ function AddFormComponent({ onExit, onAddTask, classNameAdd }) {
   const [description, setDescription] = useState("");
   const [isDisplayed, setIsDisplayed] = useState(false);
   const [isFirstRender, setIsFirstRender] = useState(true);
+  const [priority, setPriority] = useState("default");
 
   //this two useEffect help together to wont run in first rendering
   useEffect(() => {
@@ -39,12 +40,15 @@ function AddFormComponent({ onExit, onAddTask, classNameAdd }) {
     }
   }, [reminderHour, reminderHour]);
 
-  // useEffect(() => {
-  //   setReminderTime(() => reminderHour + ":" + reminderMinute);
-  // }, [reminderHour]);
-  // useEffect(() => {
-  //   setReminderTime(() => reminderHour + ":" + reminderMinute);
-  // }, [reminderMinute]);
+  const lowPriorityHandler = () => {
+    setPriority("low");
+  };
+  const midPriorityHandler = () => {
+    setPriority("mid");
+  };
+  const highPriorityHandler = () => {
+    setPriority("high");
+  };
 
   const handleToggle = () => {
     setIsDisplayed((prevState) => !prevState);
@@ -65,12 +69,14 @@ function AddFormComponent({ onExit, onAddTask, classNameAdd }) {
       description: `${reminderTime && "یادآوری: "}${reminderTime} ${
         reminderTime && "قبل"
       } ${description}`,
+      priority: priority,
     };
     onAddTask(newTask);
     setTitle("");
     setDescription("");
     setDeadLineDate("");
     setDeadLineTime("");
+    setPriority("default");
   };
 
   const handleCancel = () => {
@@ -82,6 +88,7 @@ function AddFormComponent({ onExit, onAddTask, classNameAdd }) {
     <div className={classVlaue + classNameAdd}>
       <div className="bg-white rounded-lg border m-6 p-6 w-fit">
         <ButtonComponent
+          type="button"
           context="خروج"
           icon="exit"
           className="sideBar"
@@ -106,11 +113,14 @@ function AddFormComponent({ onExit, onAddTask, classNameAdd }) {
               classNameAdd=" w-full text-right mb-2 p-2"
             />
           </div>
-          <div className="w-76 flex justify-between">
+          <div className=" flex justify-between">
             <div className=" w-80">
               <CalendarComponent />
-              <div className="flex items-center  justify-around">
+            </div>
+            <div className="flex flex-col gap-2 w-80">
+              <div className="flex items-center ">
                 <ButtonComponent
+                  type="button"
                   context="آخرین فرصت:"
                   icon="clock"
                   className="none"
@@ -129,10 +139,9 @@ function AddFormComponent({ onExit, onAddTask, classNameAdd }) {
                   />
                 </div>
               </div>
-            </div>
-            <div className=" w-80">
-              <div className=" flex items-center  justify-around">
+              <div className=" flex items-center ">
                 <ButtonComponent
+                  type="button"
                   context="یادآوری:"
                   icon="reminder"
                   className="none"
@@ -152,48 +161,81 @@ function AddFormComponent({ onExit, onAddTask, classNameAdd }) {
                 </div>
                 <span>قبل</span>
               </div>
-              <div className="flex items-center  justify-around">
+              <div className="flex items-center ">
                 <ButtonComponent
+                  type="button"
                   context="اولویت:"
                   icon="priority"
                   className="none"
+                  onClick={() => setPriority("default")}
                 />
                 <ButtonComponent
+                  type="button"
                   className="action"
                   context="کم"
-                  classNameAdd=" bg-lime-200"
+                  classNameAdd={` ${
+                    priority === "low" ? "bg-green-200" : "bg-green-50"
+                  }`}
+                  onClick={lowPriorityHandler}
                 />
                 <ButtonComponent
+                  type="button"
                   className="action"
                   context="معمولی"
-                  classNameAdd=" bg-yellow-200"
+                  classNameAdd={` ${
+                    priority === "mid" ? "bg-yellow-200" : "bg-yellow-50"
+                  }`}
+                  onClick={midPriorityHandler}
                 />
                 <ButtonComponent
+                  type="button"
                   className="action"
                   context="زیاد"
-                  classNameAdd=" bg-red-300"
+                  classNameAdd={` ${
+                    priority === "high" ? "bg-red-200" : "bg-red-50"
+                  }`}
+                  onClick={highPriorityHandler}
                 />
               </div>
               <ButtonComponent
+                type="button"
                 context="تکرار کار:"
                 icon="repeat"
                 className="none"
               />
-              <div>
-                <ButtonComponent type="submit" context="انتخاب گروه" />
-                <div className="flex gap-3 items-center">
-                  <ButtonComponent
-                    type="submit"
-                    context="اضافه کن"
-                    className="action"
-                  />
-                  <ButtonComponent
-                    type="button"
-                    context="حذف کن"
-                    onClick={handleCancel}
-                    className="action"
-                  />
-                </div>
+              <ButtonComponent
+                type="button"
+                context="انتخاب دسته بندی:"
+                icon="grouping"
+                className="none"
+              />
+              <select
+                id="grouping"
+                onchange="ChangeGroup()"
+                class=" bg-white border border-gray-300 text-gray-700 py-1 px-3 rounded focus:outline-none"
+              >
+                <option value="">-- دسته بندی کار را انتخاب کنید --</option>
+                <option value="draft">پیش نویس</option>
+                <option value="personal">شخصی</option>
+                <option value="home">خانه</option>
+                <option value="business">شغلی</option>
+                <option value="sport">ورزش</option>
+                <option value="study">مطالعه</option>
+                <option value="birthday">مناسبت</option>
+              </select>
+
+              <div className="flex gap-3 justify-center">
+                <ButtonComponent
+                  type="submit"
+                  context="اضافه کن"
+                  className="action"
+                />
+                <ButtonComponent
+                  type="button"
+                  context="حذف کن"
+                  onClick={handleCancel}
+                  className="action"
+                />{" "}
               </div>
             </div>
           </div>
