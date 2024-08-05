@@ -203,18 +203,31 @@ function AddFormComponent({ onExit, onAddTask, classNameAdd }) {
                 icon="repeat"
                 className="none"
               />
+              <select
+                id="repeat"
+                onchange="ChangeRepet()"
+                class=" bg-white border border-gray-300 text-gray-700 py-1 px-3 rounded focus:outline-none"
+              >
+                <option value="noRepeat">-- بدون تکرار --</option>
+                <option value="everyDay">هر روز تا یکماه</option>
+                <option value="everyOtherDay"> یک روز در میان تا یکماه</option>
+                <option value="everyWeek"> هر هفته تا یکماه</option>
+                <option value="everyMonth">هر ماه تا یک سال</option>
+                <option value="everyYear">هر سال</option>
+                <option value="custome">انتخاب تکرارهای از روی تقویم</option>
+              </select>
               <ButtonComponent
                 type="button"
                 context="انتخاب دسته بندی:"
-                icon="grouping"
+                icon="category"
                 className="none"
               />
               <select
-                id="grouping"
-                onchange="ChangeGroup()"
+                id="category"
+                onchange="ChangeCategory()"
                 class=" bg-white border border-gray-300 text-gray-700 py-1 px-3 rounded focus:outline-none"
               >
-                <option value="">-- دسته بندی کار را انتخاب کنید --</option>
+                <option value="noGroup">-- بدون دسته بندی --</option>
                 <option value="draft">پیش نویس</option>
                 <option value="personal">شخصی</option>
                 <option value="home">خانه</option>
@@ -226,16 +239,16 @@ function AddFormComponent({ onExit, onAddTask, classNameAdd }) {
 
               <div className="flex gap-3 justify-center">
                 <ButtonComponent
-                  type="submit"
-                  context="اضافه کن"
+                  type="button"
+                  context="پاک کردن فرم"
+                  onClick={handleCancel}
                   className="action"
                 />
                 <ButtonComponent
-                  type="button"
-                  context="حذف کن"
-                  onClick={handleCancel}
+                  type="submit"
+                  context="اضافه کردن کار"
                   className="action"
-                />{" "}
+                />
               </div>
             </div>
           </div>
