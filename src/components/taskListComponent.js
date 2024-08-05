@@ -4,12 +4,12 @@ import { TimeContext } from "../store/time-context.js";
 
 function TaskListComponent({ tasks, deleteTask }) {
   const colors = [
-    "bg-red-100", //high 0
+    "bg-purple-50", //default 0
     "bg-green-100", //low 1
-    "bg-blue-100", //
-    "bg-yellow-100", //mediom 3
-    "bg-purple-100", //defalt 4
+    "bg-yellow-100", //medium 2
+    "bg-red-100", //high 3
     "bg-pink-100",
+    "bg-blue-100",
     "bg-indigo-100",
     "bg-teal-100",
     "bg-orange-100",
@@ -61,11 +61,14 @@ function TaskListComponent({ tasks, deleteTask }) {
         />
       </div>
       <ul className=" flex flex-wrap gap-4 ">
-        {console.log(tasks)}
         {tasks.map((task) => (
           <li
             key={task.id}
-            className={`flex ${colors[4]} p-4 rounded-lg shadow-md ${liTagClassAdd}`}
+            className={`flex p-4 rounded-lg shadow-md ${liTagClassAdd} ${
+              task.priority === "default" && colors[0]
+            } ${task.priority === "low" && colors[1]} ${
+              task.priority === "mid" && colors[2]
+            } ${task.priority === "high" && colors[3]}`}
           >
             <div className="flex-grow overflow-hidden w-9/12">
               <h3 className="text-sm font-semibold mb-1 truncate">
