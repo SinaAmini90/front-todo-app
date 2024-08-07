@@ -4,13 +4,18 @@ import AddFormComponent from "./components/AddFormComponent.js";
 import TaskListComponent from "./components/taskListComponent.js";
 import ButtonComponent from "./components/ButtonComponent.js";
 import { TimeContext } from "./store/time-context.js";
+import { FormContext } from "./store/form-context.js";
 
 function App() {
+  const [displayForm, setDisplayForm] = useState(false);
   const [reminderTime, setReminderTime] = useState("");
   const [deadLineDate, setDeadLineDate] = useState("");
   const [deadLineTime, setDeadLineTime] = useState("");
   const [tasks, setTasks] = useState([]);
-  const [isDisplayed, setIsDisplayed] = useState(false);
+
+  const setDisplayFormHandler = () => {
+    setDisplayForm((prevState) => !prevState);
+  };
   const setReminderTimeHandler = (time) => {
     setReminderTime(time);
   };
@@ -19,6 +24,10 @@ function App() {
   };
   const setDeadLineTimeHandler = (time) => {
     setDeadLineTime(time);
+  };
+  const formContext = {
+    displayForm,
+    setDisplayForm: setDisplayFormHandler,
   };
   const timeContext = {
     reminderTime,
@@ -34,55 +43,69 @@ function App() {
 
   const handleAddTask = (taskData) => {
     setTasks([...tasks, taskData]);
-    setIsDisplayed((prevState) => !prevState);
+    // setDisplayFormHandler();
   };
-  const handleToggle = () => {
-    setIsDisplayed((prevState) => !prevState);
-  };
+
   return (
-    <TimeContext.Provider value={timeContext}>
-      <div className=" flex ">
-        <div className=" min-w-fit p-5 h-fit m-2 ml-0 bg-zinc-100 rounded-lg flex flex-col items-start ">
-          <ButtonComponent
-            onClick={handleToggle}
-            context="کار جدید"
-            icon="add"
-            className="sideBar"
-          />
-          <ButtonComponent
-            context="پیش نویس"
-            icon="draft"
-            className="sideBar"
-          />
-          <ButtonComponent
-            context="کارهای امروز"
-            icon="today"
-            className="sideBar"
-          />
-          <ButtonComponent
-            context="همه کارها"
-            icon="week"
-            className="sideBar"
-          />
-          <hr class="border-t-2 border-gray-300 w-full max-w-md my-4" />
-          <ButtonComponent context="پروژه های من" className="sideBar" />
-          <ButtonComponent context="شخصی" icon="personal" className="sideBar" />
-          <ButtonComponent context="خانه" icon="home" className="sideBar" />
-          <ButtonComponent context="شغلی" icon="business" className="sideBar" />
-          <ButtonComponent context="ورزش" icon="sport" className="sideBar" />
-          <ButtonComponent context="مطالعه" icon="study" className="sideBar" />
-          <ButtonComponent
-            context="مناسبت"
-            icon="birthday"
-            className="sideBar"
-          />
+    <FormContext.Provider value={formContext}>
+      <TimeContext.Provider value={timeContext}>
+        <div className=" flex ">
+          {console.log(displayForm)}
+          <div className=" min-w-fit p-5 h-fit m-2 ml-0 bg-zinc-100 rounded-lg flex flex-col items-start ">
+            <ButtonComponent
+              // onClick={handleToggle}
+              onClick={setDisplayFormHandler}
+              context="کار جدید"
+              icon="add"
+              className="sideBar"
+            />
+            <ButtonComponent
+              context="پیش نویس"
+              icon="draft"
+              className="sideBar"
+            />
+            <ButtonComponent
+              context="کارهای امروز"
+              icon="today"
+              className="sideBar"
+            />
+            <ButtonComponent
+              context="همه کارها"
+              icon="week"
+              className="sideBar"
+            />
+            <hr class="border-t-2 border-gray-300 w-full max-w-md my-4" />
+            <ButtonComponent context="پروژه های من" className="sideBar" />
+            <ButtonComponent
+              context="شخصی"
+              icon="personal"
+              className="sideBar"
+            />
+            <ButtonComponent context="خانه" icon="home" className="sideBar" />
+            <ButtonComponent
+              context="شغلی"
+              icon="business"
+              className="sideBar"
+            />
+            <ButtonComponent context="ورزش" icon="sport" className="sideBar" />
+            <ButtonComponent
+              context="مطالعه"
+              icon="study"
+              className="sideBar"
+            />
+            <ButtonComponent
+              context="مناسبت"
+              icon="birthday"
+              className="sideBar"
+            />
+          </div>
+          <TaskListComponent tasks={tasks} deleteTask={handleDeleteTask} />
+          <div className={displayForm ? "" : " hidden"}>
+            <AddFormComponent onAddTask={handleAddTask} />
+          </div>
         </div>
-        <TaskListComponent tasks={tasks} deleteTask={handleDeleteTask} />
-        <div className={isDisplayed ? "" : " hidden"}>
-          <AddFormComponent onAddTask={handleAddTask} onExit={handleToggle} />
-        </div>
-      </div>
-    </TimeContext.Provider>
+      </TimeContext.Provider>
+    </FormContext.Provider>
   );
 }
 
