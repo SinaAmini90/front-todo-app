@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useContext } from "react";
 import jalaali from "jalaali-js";
 import ButtonComponent from "./ButtonComponent";
-import { TimeContext } from "../store/time-context";
+import { TimeContext } from "../store/time-context.js";
+import { FormContext } from "../store/form-context.js";
 
-function CalendarComponent(onClick) {
+function CalendarComponent() {
+  const { displayForm, setDisplayForm } = useContext(FormContext);
+  const { setDeadLineDate, setDeadLineTime } = useContext(TimeContext);
+  const [classNameClick, setClassNameClick] = useState("");
   const [deadLine, setDeadLine] = useState("");
   const [selectedDate, setSelectedDate] = useState(null);
-
   const now = new Date();
   const year = now.getFullYear();
   const month = now.getMonth() + 1;
@@ -15,6 +18,12 @@ function CalendarComponent(onClick) {
   const [jalaaliYear, setJalaaliYear] = useState(jalaaliDate.jy);
   const [jalaaliMonth, setJalaaliMonth] = useState(jalaaliDate.jm);
   const jalaaliDay = jalaaliDate.jd;
+
+  useEffect(() => {
+    if (!displayForm) {
+      setSelectedDate(null);
+    }
+  }, [displayForm]);
 
   function getDayOfWeak(jy, jm, jd) {
     const { gy, gm, gd } = jalaali.toGregorian(jy, jm, jd);
@@ -148,8 +157,6 @@ function CalendarComponent(onClick) {
       }
     });
   };
-  const [classNameClick, setClassNameClick] = useState("");
-  const { setDeadLineDate, setDeadLineTime } = useContext(TimeContext);
   return (
     <div className="p-4">
       <div className="p-4 flex justify-between">
