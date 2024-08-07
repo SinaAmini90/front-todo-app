@@ -5,8 +5,9 @@ import CalendarComponent from "./CalenderComponent";
 import ButtonComponent from "./ButtonComponent.js";
 import ClockComponent from "./ClockComponent";
 import { TimeContext } from "../store/time-context.js";
+import { FormContext } from "../store/form-context.js";
 
-function AddFormComponent({ onExit, onAddTask, classNameAdd }) {
+function AddFormComponent({ onAddTask, classNameAdd }) {
   const {
     deadLineDate,
     deadLineTime,
@@ -15,6 +16,7 @@ function AddFormComponent({ onExit, onAddTask, classNameAdd }) {
     reminderTime,
     setReminderTime,
   } = useContext(TimeContext);
+  const { displayForm, setDisplayForm } = useContext(FormContext);
   const [hour, setHour] = useState("00");
   const [minute, setMinute] = useState("00");
   const [reminderHour, setReminderHour] = useState("00");
@@ -22,9 +24,9 @@ function AddFormComponent({ onExit, onAddTask, classNameAdd }) {
   const [date, setDate] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [isDisplayed, setIsDisplayed] = useState(false);
   const [isFirstRender, setIsFirstRender] = useState(true);
   const [priority, setPriority] = useState("default");
+  const [category, setCategory] = useState("");
 
   //this two useEffect help together to wont run in first rendering
   useEffect(() => {
@@ -38,7 +40,7 @@ function AddFormComponent({ onExit, onAddTask, classNameAdd }) {
     } else {
       setReminderTime(`${reminderHour}:${reminderMinute}`);
     }
-  }, [reminderHour, reminderHour]);
+  }, [reminderHour, reminderMinute]);
 
   // to get diffrent color for tasks base type of priority
   const lowPriorityHandler = () => {
@@ -51,11 +53,27 @@ function AddFormComponent({ onExit, onAddTask, classNameAdd }) {
     setPriority("high");
   };
 
-  const handleToggle = () => {
-    setIsDisplayed((prevState) => !prevState);
-  };
+  useEffect(() => {
+    if (!displayForm) {
+      setTitle("");
+      setDescription("");
+      setHour("00");
+      setMinute("00");
+      setReminderHour("00");
+      setReminderMinute("00");
+      setDeadLineDate("");
+      setDeadLineTime("");
+      setPriority("default");
+      setCategory("noGroup");
+    }
+  }, [displayForm]);
+
   let classVlaue =
     " fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center ";
+
+  const onExitHandler = () => {
+    setDisplayForm();
+  };
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -71,20 +89,30 @@ function AddFormComponent({ onExit, onAddTask, classNameAdd }) {
         reminderTime && "قبل"
       } ${description}`,
       priority: priority,
+      category: category,
     };
     onAddTask(newTask);
+    setDisplayForm();
+  };
+
+  const handleCleanForm = () => {
+    // handleToggle();
     setTitle("");
     setDescription("");
+    setHour("00");
+    setMinute("00");
+    setReminderHour("00");
+    setReminderMinute("00");
     setDeadLineDate("");
     setDeadLineTime("");
     setPriority("default");
+    setCategory("noGroup");
   };
 
-  const handleCancel = () => {
-    setTitle("");
-    setDescription("");
+  const onChangeCategory = (event) => {
+    const value = event.target.value;
+    setCategory(value);
   };
-
   return (
     <div className={classVlaue + classNameAdd}>
       <div className="bg-white rounded-lg border m-6 p-6 w-fit">
@@ -93,7 +121,7 @@ function AddFormComponent({ onExit, onAddTask, classNameAdd }) {
           context="خروج"
           icon="exit"
           className="sideBar"
-          onClick={onExit}
+          onClick={onExitHandler}
         />
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className=" ">
@@ -206,7 +234,8 @@ function AddFormComponent({ onExit, onAddTask, classNameAdd }) {
               />
               <select
                 id="repeat"
-                onchange="ChangeRepet()"
+                // onChange={onChangeRepeat}
+                // value={repeat}
                 class=" bg-white border border-gray-300 text-gray-700 py-1 px-3 rounded focus:outline-none"
               >
                 <option value="noRepeat">-- بدون تکرار --</option>
@@ -225,7 +254,8 @@ function AddFormComponent({ onExit, onAddTask, classNameAdd }) {
               />
               <select
                 id="category"
-                onchange="ChangeCategory()"
+                onChange={onChangeCategory}
+                value={category}
                 class=" bg-white border border-gray-300 text-gray-700 py-1 px-3 rounded focus:outline-none"
               >
                 <option value="noGroup">-- بدون دسته بندی --</option>
@@ -242,7 +272,7 @@ function AddFormComponent({ onExit, onAddTask, classNameAdd }) {
                 <ButtonComponent
                   type="button"
                   context="پاک کردن فرم"
-                  onClick={handleCancel}
+                  onClick={handleCleanForm}
                   className="action"
                 />
                 <ButtonComponent
