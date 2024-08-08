@@ -95,20 +95,6 @@ function AddFormComponent({ onAddTask, classNameAdd }) {
     setDisplayForm();
   };
 
-  const handleCleanForm = () => {
-    // handleToggle();
-    setTitle("");
-    setDescription("");
-    setHour("00");
-    setMinute("00");
-    setReminderHour("00");
-    setReminderMinute("00");
-    setDeadLineDate("");
-    setDeadLineTime("");
-    setPriority("default");
-    setCategory("noGroup");
-  };
-
   const onChangeCategory = (event) => {
     const value = event.target.value;
     setCategory(value);
@@ -116,13 +102,6 @@ function AddFormComponent({ onAddTask, classNameAdd }) {
   return (
     <div className={classVlaue + classNameAdd}>
       <div className="bg-white rounded-lg border m-6 p-6 w-fit">
-        <ButtonComponent
-          type="button"
-          context="خروج"
-          icon="exit"
-          className="sideBar"
-          onClick={onExitHandler}
-        />
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className=" ">
             <InputComponent
@@ -271,8 +250,8 @@ function AddFormComponent({ onAddTask, classNameAdd }) {
               <div className="flex gap-3 justify-center">
                 <ButtonComponent
                   type="button"
-                  context="پاک کردن فرم"
-                  onClick={handleCleanForm}
+                  context="خروج از فرم"
+                  onClick={onExitHandler}
                   className="action"
                 />
                 <ButtonComponent
