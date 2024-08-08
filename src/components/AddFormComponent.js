@@ -80,18 +80,20 @@ function AddFormComponent({ onAddTask, classNameAdd }) {
     deadLineTime === "00:00" && setDeadLineTime(() => "");
     reminderTime === "00:00" && setReminderTime(() => "");
 
-    const newTask = {
-      id: Date.now(),
-      title: `${title}${deadLineDate && " _ "}${deadLineDate}${
-        deadLineTime && " _ "
-      }${deadLineTime}`,
-      description: `${reminderTime && "یادآوری: "}${reminderTime} ${
-        reminderTime && "قبل"
-      } ${description}`,
-      priority: priority,
-      category: category,
-    };
-    onAddTask(newTask);
+    if (title.trim()) {
+      const newTask = {
+        id: Date.now(),
+        title: `${title}${deadLineDate && " _ "}${deadLineDate}${
+          deadLineTime && " _ "
+        }${deadLineTime}`,
+        description: `${description}${
+          reminderTime && "_ یادآوری: "
+        }${reminderTime} ${reminderTime && " قبل"}`,
+        priority: priority,
+        category: category,
+      };
+      onAddTask(newTask);
+    }
     setDisplayForm();
   };
 
