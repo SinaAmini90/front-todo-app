@@ -12,9 +12,9 @@ async function getTasks() {
   }
 }
 
-async function createTask() {
+async function createTask(taskData) {
   try {
-    const response = await api.post(`/task`);
+    const response = await api.post(`/task`, taskData);
     console.log(response.data);
     return response.data;
   } catch (error) {

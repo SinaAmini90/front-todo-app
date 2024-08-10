@@ -6,7 +6,7 @@ import TaskListComponent from "./components/taskListComponent.js";
 import ButtonComponent from "./components/ButtonComponent.js";
 import { TimeContext } from "./store/time-context.js";
 import { FormContext } from "./store/form-context.js";
-import { getTasks, deleteTask } from "./api/taskAPI.js";
+import { getTasks, deleteTask, createTask } from "./api/taskAPI.js";
 
 function App() {
   const [displayForm, setDisplayForm] = useState(false);
@@ -42,11 +42,11 @@ function App() {
   // const handleDeleteTask = (taskId) => {
   //   setTasks(tasks.filter((task) => task.id !== taskId));
   // };
-
-  const handleAddTask = (taskData) => {
-    setTasks([...tasks, taskData]);
-    // setDisplayFormHandler();
+  const handleAddTask = async (taskData) => {
+    const newTask = await createTask(taskData);
+    setTasks((prevTasks) => [...prevTasks, newTask]);
   };
+
   const handleDeleteTask = async (taskId) => {
     await deleteTask(taskId);
     setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
