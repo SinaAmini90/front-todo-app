@@ -1,10 +1,12 @@
 import "./App.css";
-import React, { useState, createContext, useContext } from "react";
+import axios from "axios";
+import React, { useState, createContext, useContext, useEffect } from "react";
 import AddFormComponent from "./components/AddFormComponent.js";
 import TaskListComponent from "./components/taskListComponent.js";
 import ButtonComponent from "./components/ButtonComponent.js";
 import { TimeContext } from "./store/time-context.js";
 import { FormContext } from "./store/form-context.js";
+import { getTasks } from "./api/taskAPI.js";
 
 function App() {
   const [displayForm, setDisplayForm] = useState(false);
@@ -46,11 +48,17 @@ function App() {
     // setDisplayFormHandler();
   };
 
+  useEffect(() => {
+    (async () => {
+      const fetchedTasks = await getTasks();
+      setTasks(fetchedTasks);
+    })();
+  }, []);
+
   return (
     <FormContext.Provider value={formContext}>
       <TimeContext.Provider value={timeContext}>
         <div className=" flex ">
-          {console.log(displayForm)}
           <div className=" min-w-fit p-5 h-fit m-2 ml-0 bg-zinc-100 rounded-lg flex flex-col items-start ">
             <ButtonComponent
               // onClick={handleToggle}
@@ -64,6 +72,7 @@ function App() {
               icon="draft"
               className="sideBar"
             />
+            {/* {getTasksByUserId(11)} */}
             <ButtonComponent
               context="کارهای امروز"
               icon="today"
