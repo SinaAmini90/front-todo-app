@@ -8,33 +8,7 @@ function TaskListComponent({ tasks, deleteTask }) {
     "bg-green-100", //low 1
     "bg-yellow-100", //medium 2
     "bg-red-100", //high 3
-    "bg-pink-100",
-    "bg-blue-100",
-    "bg-indigo-100",
-    "bg-teal-100",
-    "bg-orange-100",
-    "bg-red-200",
-    "bg-green-200",
-    "bg-blue-200",
-    "bg-yellow-200",
-    "bg-purple-200",
-    "bg-pink-200",
-    "bg-indigo-200",
-    "bg-teal-200",
-    "bg-orange-200",
   ];
-
-  const initialColors = [];
-  const [taskColors, setTaskColors] = useState([]);
-
-  useEffect(() => {
-    let i = 0;
-    tasks.forEach((task) => {
-      initialColors[i] = colors[Math.floor(Math.random() * colors.length)];
-      i += 1;
-    });
-    setTaskColors(initialColors);
-  }, [tasks]);
 
   // two type of layout for todos list.
   const [liTagClass, setliTagClass] = useState(true);
