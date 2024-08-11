@@ -26,11 +26,12 @@ function AddFormComponent({ onAddTask, classNameAdd }) {
   const [category, setCategory] = useState("");
 
   //this two useEffect help together to wont run in first rendering
-  useEffect(() => {
-    if (!isFirstRender) {
-      setDeadLineTime(`${hour}:${minute}`);
-    }
-  }, [hour, minute]);
+  // useEffect(() => {
+  //   setDeadLineTime(`${hour}:${minute}`);
+  //   // if (!isFirstRender) {
+
+  //   // }
+  // }, [hour, minute]);
   // (**about reminder time ** develop later**)
   // useEffect(() => {
   //   if (isFirstRender) {
@@ -74,10 +75,8 @@ function AddFormComponent({ onAddTask, classNameAdd }) {
   };
   const handleSubmit = (event) => {
     event.preventDefault();
-
     deadLineTime === "00:00" && setDeadLineTime(() => "");
     // reminderTime === "00:00" && setReminderTime(() => ""); (**about reminder time ** develop later**)
-
     if (title.trim()) {
       const id = Math.floor(Date.now() * Math.random());
       const newTask = {
@@ -93,7 +92,8 @@ function AddFormComponent({ onAddTask, classNameAdd }) {
         // }${reminderTime} ${reminderTime && " قبل"}`,
         priority: priority,
         category: category,
-        deadLineDate: deadLineDate,
+        deadlinedate: deadLineDate,
+        deadlinetime: deadLineTime,
         // reminderTime: reminderTime, (**about reminder time ** develop later**)
       };
       onAddTask(newTask);

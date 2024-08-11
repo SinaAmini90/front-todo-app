@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import ButtonComponent from "./ButtonComponent.js";
+import { TimeContext } from "../store/time-context.js";
 
 function TaskListComponent({ tasks, deleteTask }) {
+  // const { deadLineTime, deadLineDate } = useContext(TimeContext);
   const colors = [
     "bg-purple-50", //default 0
     "bg-green-100", //low 1
@@ -14,11 +16,11 @@ function TaskListComponent({ tasks, deleteTask }) {
   const flexTypeHandler = () => {
     setliTagClass((prevState) => !prevState);
   };
-
+  //for two type of layout for tasks list
   let liTagClassAdd = liTagClass
     ? " w-52 h-52 flex-col "
     : " max-w-2xl w-full items-center";
-  console.log("tasks=>", tasks);
+
   return (
     <div className="min-w-96 w-full p-5 m-2 bg-zinc-50 rounded-lg ">
       <div className="flex justify-between">
@@ -41,6 +43,10 @@ function TaskListComponent({ tasks, deleteTask }) {
             <div className="flex-grow overflow-hidden w-9/12">
               <h3 className="text-sm font-semibold mb-1 truncate">
                 {task.title}
+                {task.deadlinedate && " _ "}
+                {task.deadlinedate}
+                {task.deadlinetime && " _ "}
+                {task.deadlinetime}
               </h3>
               <p className="text-gray-600 text-sm break-words truncate">
                 توضیحات: {task.description}

@@ -52,6 +52,7 @@ function App() {
       try {
         const fetchedTasks = await getTasks();
         fetchedTasks ? setTasks(fetchedTasks) : setTasks([]);
+        console.log("fetchedTasks=>", fetchedTasks);
       } catch (error) {
         console.error(
           "Error fetching tasks:",
