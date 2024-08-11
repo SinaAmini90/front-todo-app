@@ -39,12 +39,9 @@ function App() {
     deadLineTime,
     setDeadLineTime: setDeadLineTimeHandler,
   };
-  // const handleDeleteTask = (taskId) => {
-  //   setTasks(tasks.filter((task) => task.id !== taskId));
-  // };
   const handleAddTask = async (taskData) => {
     const newTask = await createTask(taskData);
-    setTasks((prevTasks) => [...prevTasks, newTask]);
+    setTasks((prevTasks) => [...prevTasks, taskData]);
   };
 
   const handleDeleteTask = async (taskId) => {
@@ -52,10 +49,19 @@ function App() {
     setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
   };
   useEffect(() => {
-    (async () => {
-      const fetchedTasks = await getTasks();
-      setTasks(fetchedTasks);
-    })();
+    const fetchTasks = async () => {
+      try {
+        const fetchedTasks = await getTasks();
+        setTasks(fetchedTasks);
+      } catch (error) {
+        console.error(
+          "Error fetching tasks:",
+          error.response ? error.response.data : error.message
+        );
+      }
+    };
+
+    fetchTasks();
   }, []);
 
   return (
