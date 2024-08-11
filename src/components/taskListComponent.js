@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState } from "react";
 import ButtonComponent from "./ButtonComponent.js";
-import { TimeContext } from "../store/time-context.js";
 
 function TaskListComponent({ tasks, deleteTask }) {
   const colors = [
@@ -12,19 +11,14 @@ function TaskListComponent({ tasks, deleteTask }) {
 
   // two type of layout for todos list.
   const [liTagClass, setliTagClass] = useState(true);
-  function flexTypeHandler() {
+  const flexTypeHandler = () => {
     setliTagClass((prevState) => !prevState);
-  }
-  let liTagClassAdd = "";
-  switch (liTagClass) {
-    case true: //grid
-      liTagClassAdd = " w-52 h-52 flex-col ";
-      break;
-    case false: //row
-      liTagClassAdd = " max-w-2xl w-full items-center";
-      break;
-  }
+  };
 
+  let liTagClassAdd = liTagClass
+    ? " w-52 h-52 flex-col "
+    : " max-w-2xl w-full items-center";
+  console.log("tasks=>", tasks);
   return (
     <div className="min-w-96 w-full p-5 m-2 bg-zinc-50 rounded-lg ">
       <div className="flex justify-between">
@@ -37,7 +31,7 @@ function TaskListComponent({ tasks, deleteTask }) {
       <ul className=" flex flex-wrap gap-4 ">
         {tasks.map((task) => (
           <li
-            key={task.id}
+            key={task.key}
             className={`flex p-4 rounded-lg shadow-md ${liTagClassAdd} ${
               task.priority === "default" && colors[0]
             } ${task.priority === "low" && colors[1]} ${
