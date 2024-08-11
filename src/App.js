@@ -1,6 +1,5 @@
 import "./App.css";
-import axios from "axios";
-import React, { useState, createContext, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import AddFormComponent from "./components/AddFormComponent.js";
 import TaskListComponent from "./components/taskListComponent.js";
 import ButtonComponent from "./components/ButtonComponent.js";
@@ -10,7 +9,7 @@ import { getTasks, deleteTask, createTask } from "./api/taskAPI.js";
 
 function App() {
   const [displayForm, setDisplayForm] = useState(false);
-  const [reminderTime, setReminderTime] = useState("");
+  // const [reminderTime, setReminderTime] = useState(""); (**about reminder time ** develop later**)
   const [deadLineDate, setDeadLineDate] = useState("");
   const [deadLineTime, setDeadLineTime] = useState("");
   const [tasks, setTasks] = useState([]);
@@ -18,9 +17,9 @@ function App() {
   const setDisplayFormHandler = () => {
     setDisplayForm((prevState) => !prevState);
   };
-  const setReminderTimeHandler = (time) => {
-    setReminderTime(time);
-  };
+  // const setReminderTimeHandler = (time) => {
+  //   setReminderTime(time);
+  // }; //about reminder time ** develop later
   const setDeadLineDateHandler = (date) => {
     setDeadLineDate(date);
   };
@@ -32,27 +31,27 @@ function App() {
     setDisplayForm: setDisplayFormHandler,
   };
   const timeContext = {
-    reminderTime,
-    setReminderTime: setReminderTimeHandler,
+    // reminderTime, (**about reminder time ** develop later**)
+    // setReminderTime: setReminderTimeHandler, (**about reminder time ** develop later**)
     deadLineDate,
     setDeadLineDate: setDeadLineDateHandler,
     deadLineTime,
     setDeadLineTime: setDeadLineTimeHandler,
   };
   const handleAddTask = async (taskData) => {
-    const newTask = await createTask(taskData);
+    await createTask(taskData);
     setTasks((prevTasks) => [...prevTasks, taskData]);
   };
-
   const handleDeleteTask = async (taskId) => {
     await deleteTask(taskId);
     setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
   };
+  //
   useEffect(() => {
     const fetchTasks = async () => {
       try {
         const fetchedTasks = await getTasks();
-        setTasks(fetchedTasks);
+        fetchedTasks ? setTasks(fetchedTasks) : setTasks([]);
       } catch (error) {
         console.error(
           "Error fetching tasks:",
@@ -81,7 +80,6 @@ function App() {
               icon="draft"
               className="sideBar"
             />
-            {/* {getTasksByUserId(11)} */}
             <ButtonComponent
               context="کارهای امروز"
               icon="today"

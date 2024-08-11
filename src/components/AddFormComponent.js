@@ -1,8 +1,7 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import InputComponent from "./InputComponent";
 import CalendarComponent from "./CalenderComponent";
 import ButtonComponent from "./ButtonComponent.js";
-import ClockComponent from "./ClockComponent";
 import { TimeContext } from "../store/time-context.js";
 import { FormContext } from "../store/form-context.js";
 
@@ -12,15 +11,14 @@ function AddFormComponent({ onAddTask, classNameAdd }) {
     deadLineTime,
     setDeadLineDate,
     setDeadLineTime,
-    reminderTime,
+    // reminderTime, (**about reminder time ** develop later**)
     setReminderTime,
   } = useContext(TimeContext);
   const { displayForm, setDisplayForm } = useContext(FormContext);
   const [hour, setHour] = useState("00");
   const [minute, setMinute] = useState("00");
-  const [reminderHour, setReminderHour] = useState("00");
-  const [reminderMinute, setReminderMinute] = useState("00");
-  const [date, setDate] = useState("");
+  // const [reminderHour, setReminderHour] = useState("00"); (**about reminder time ** develop later**)
+  // const [reminderMinute, setReminderMinute] = useState("00"); (**about reminder time ** develop later**)
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isFirstRender, setIsFirstRender] = useState(true);
@@ -33,13 +31,14 @@ function AddFormComponent({ onAddTask, classNameAdd }) {
       setDeadLineTime(`${hour}:${minute}`);
     }
   }, [hour, minute]);
-  useEffect(() => {
-    if (isFirstRender) {
-      setIsFirstRender(false);
-    } else {
-      setReminderTime(`${reminderHour}:${reminderMinute}`);
-    }
-  }, [reminderHour, reminderMinute]);
+  // (**about reminder time ** develop later**)
+  // useEffect(() => {
+  //   if (isFirstRender) {
+  //     setIsFirstRender(false);
+  //   } else {
+  //     setReminderTime(`${reminderHour}:${reminderMinute}`);
+  //   }
+  // }, [reminderHour, reminderMinute]);
 
   useEffect(() => {
     if (!displayForm) {
@@ -47,8 +46,8 @@ function AddFormComponent({ onAddTask, classNameAdd }) {
       setDescription("");
       setHour("00");
       setMinute("00");
-      setReminderHour("00");
-      setReminderMinute("00");
+      // setReminderHour("00"); (**about reminder time ** develop later**)
+      // setReminderMinute("00"); (**about reminder time ** develop later**)
       setDeadLineDate("");
       setDeadLineTime("");
       setPriority("default");
@@ -77,7 +76,7 @@ function AddFormComponent({ onAddTask, classNameAdd }) {
     event.preventDefault();
 
     deadLineTime === "00:00" && setDeadLineTime(() => "");
-    reminderTime === "00:00" && setReminderTime(() => "");
+    // reminderTime === "00:00" && setReminderTime(() => ""); (**about reminder time ** develop later**)
 
     if (title.trim()) {
       const id = Math.floor(Date.now() * Math.random());
@@ -95,7 +94,7 @@ function AddFormComponent({ onAddTask, classNameAdd }) {
         priority: priority,
         category: category,
         deadLineDate: deadLineDate,
-        reminderTime: reminderTime,
+        // reminderTime: reminderTime, (**about reminder time ** develop later**)
       };
       onAddTask(newTask);
     }
@@ -154,7 +153,7 @@ function AddFormComponent({ onAddTask, classNameAdd }) {
                   />
                 </div>
               </div>
-              <div className=" flex items-center ">
+              {/* <div className=" flex items-center ">
                 <ButtonComponent
                   type="button"
                   context="یادآوری:"
@@ -175,7 +174,8 @@ function AddFormComponent({ onAddTask, classNameAdd }) {
                   />
                 </div>
                 <span>قبل</span>
-              </div>
+              </div> */}
+              {/*(**about reminder time ** develop later**)*/}
               <div className="flex items-center ">
                 <ButtonComponent
                   type="button"
@@ -253,7 +253,6 @@ function AddFormComponent({ onAddTask, classNameAdd }) {
                 <option value="study">مطالعه</option>
                 <option value="birthday">مناسبت</option>
               </select>
-
               <div className="flex gap-3 justify-center">
                 <ButtonComponent
                   type="button"
