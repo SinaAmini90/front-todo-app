@@ -1,4 +1,3 @@
-// import "../App.css";
 import React, { useState, useContext, useEffect, useRef } from "react";
 import InputComponent from "./InputComponent";
 import CalendarComponent from "./CalenderComponent";
@@ -42,17 +41,6 @@ function AddFormComponent({ onAddTask, classNameAdd }) {
     }
   }, [reminderHour, reminderMinute]);
 
-  // to get diffrent color for tasks base type of priority
-  const lowPriorityHandler = () => {
-    setPriority("low");
-  };
-  const midPriorityHandler = () => {
-    setPriority("mid");
-  };
-  const highPriorityHandler = () => {
-    setPriority("high");
-  };
-
   useEffect(() => {
     if (!displayForm) {
       setTitle("");
@@ -68,6 +56,17 @@ function AddFormComponent({ onAddTask, classNameAdd }) {
     }
   }, [displayForm]);
 
+  // to get diffrent color for tasks base type of priority
+  const lowPriorityHandler = () => {
+    setPriority("low");
+  };
+  const midPriorityHandler = () => {
+    setPriority("mid");
+  };
+  const highPriorityHandler = () => {
+    setPriority("high");
+  };
+
   let classVlaue =
     " fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center ";
 
@@ -81,16 +80,22 @@ function AddFormComponent({ onAddTask, classNameAdd }) {
     reminderTime === "00:00" && setReminderTime(() => "");
 
     if (title.trim()) {
+      const id = Math.floor(Date.now() * Math.random());
       const newTask = {
-        id: Date.now(),
-        title: `${title}${deadLineDate && " _ "}${deadLineDate}${
-          deadLineTime && " _ "
-        }${deadLineTime}`,
-        description: `${description}${
-          reminderTime && "_ یادآوری: "
-        }${reminderTime} ${reminderTime && " قبل"}`,
+        key: id,
+        id: id,
+        title: title,
+        // `${title}${deadLineDate && " _ "}${deadLineDate}${
+        //   deadLineTime && " _ "
+        // }${deadLineTime}`,
+        description: description,
+        // `${description}${
+        //   reminderTime && "_ یادآوری: "
+        // }${reminderTime} ${reminderTime && " قبل"}`,
         priority: priority,
         category: category,
+        deadLineDate: deadLineDate,
+        reminderTime: reminderTime,
       };
       onAddTask(newTask);
     }
