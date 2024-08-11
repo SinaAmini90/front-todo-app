@@ -4,7 +4,6 @@ import api from "./apiFunctions.js";
 async function getTasks() {
   try {
     const response = await api.get(`/task`);
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching tasks:", error);
@@ -15,7 +14,6 @@ async function getTasks() {
 async function createTask(taskData) {
   try {
     const response = await api.post(`/task`, taskData);
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching tasks:", error);
