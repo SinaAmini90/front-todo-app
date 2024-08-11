@@ -12,7 +12,7 @@ function AddFormComponent({ onAddTask, classNameAdd }) {
     setDeadLineDate,
     setDeadLineTime,
     // reminderTime, (**about reminder time ** develop later**)
-    setReminderTime,
+    // setReminderTime,
   } = useContext(TimeContext);
   const { displayForm, setDisplayForm } = useContext(FormContext);
   const [hour, setHour] = useState("00");
@@ -212,7 +212,8 @@ function AddFormComponent({ onAddTask, classNameAdd }) {
                   onClick={highPriorityHandler}
                 />
               </div>
-              <ButtonComponent
+              {/* (**about task repeat ** develop later**) */}
+              {/* <ButtonComponent
                 type="button"
                 context="تکرار کار:"
                 icon="repeat"
@@ -231,7 +232,7 @@ function AddFormComponent({ onAddTask, classNameAdd }) {
                 <option value="everyMonth">هر ماه تا یک سال</option>
                 <option value="everyYear">هر سال</option>
                 <option value="custome">انتخاب تکرارهای از روی تقویم</option>
-              </select>
+              </select> */}
               <ButtonComponent
                 type="button"
                 context="انتخاب دسته بندی:"
