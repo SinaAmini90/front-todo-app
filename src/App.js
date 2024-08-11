@@ -1,11 +1,11 @@
 import "./App.css";
 import React, { useState, useEffect } from "react";
-import AddFormComponent from "./components/AddFormComponent.js";
-import TaskListComponent from "./components/taskListComponent.js";
-import ButtonComponent from "./components/ButtonComponent.js";
+import { getTasks, deleteTask, createTask } from "./api/taskAPI.js";
 import { TimeContext } from "./store/time-context.js";
 import { FormContext } from "./store/form-context.js";
-import { getTasks, deleteTask, createTask } from "./api/taskAPI.js";
+import AddFormComponent from "./components/AddFormComponent.js";
+import TaskListComponent from "./components/taskListComponent.js";
+import SideBarComponent from "./components/SideBarComponent.js";
 
 function App() {
   const [displayForm, setDisplayForm] = useState(false);
@@ -13,10 +13,50 @@ function App() {
   const [deadLineDate, setDeadLineDate] = useState("");
   const [deadLineTime, setDeadLineTime] = useState("");
   const [tasks, setTasks] = useState([]);
+  const [customTasks, setCustomTasks] = useState([]);
 
+  const sideBarHandler = (context) => {
+    switch (context) {
+      case "new task":
+        setDisplayForm((prevState) => !prevState);
+        break;
+      case "draft":
+        setCustomTasks(tasks.filter((task) => task.category === "draft"));
+        break;
+      case "today tasks":
+        const today = new Date().toISOString().split("T")[0];
+        setCustomTasks(tasks.filter((task) => task.deadlineDate === today));
+        break;
+      case "all tasks":
+        setCustomTasks(tasks.filter((task) => task.category !== "draft"));
+        break;
+      case "personal":
+        setCustomTasks(tasks.filter((task) => task.category === "personal"));
+        break;
+      case "home":
+        setCustomTasks(tasks.filter((task) => task.category === "home"));
+        break;
+      case "business":
+        setCustomTasks(tasks.filter((task) => task.category === "business"));
+        break;
+      case "sport":
+        setCustomTasks(tasks.filter((task) => task.category === "sport"));
+        break;
+      case "study":
+        setCustomTasks(tasks.filter((task) => task.category === "study"));
+        break;
+      case "birthday":
+        setCustomTasks(tasks.filter((task) => task.category === "birthday"));
+        break;
+      default:
+        setCustomTasks([...tasks]);
+        break;
+    }
+  };
   const setDisplayFormHandler = () => {
     setDisplayForm((prevState) => !prevState);
   };
+
   // const setReminderTimeHandler = (time) => {
   //   setReminderTime(time);
   // }; //about reminder time ** develop later
@@ -41,10 +81,14 @@ function App() {
   const handleAddTask = async (taskData) => {
     await createTask(taskData);
     setTasks((prevTasks) => [...prevTasks, taskData]);
+    setCustomTasks((prevTasks) => [...prevTasks, taskData]);
   };
   const handleDeleteTask = async (taskId) => {
     await deleteTask(taskId);
     setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
+    setCustomTasks((prevTasks) =>
+      prevTasks.filter((task) => task.id !== taskId)
+    );
   };
   //
   useEffect(() => {
@@ -52,7 +96,11 @@ function App() {
       try {
         const fetchedTasks = await getTasks();
         fetchedTasks ? setTasks(fetchedTasks) : setTasks([]);
-        console.log("fetchedTasks=>", fetchedTasks);
+        fetchedTasks
+          ? setCustomTasks(
+              fetchedTasks.filter((task) => task.category !== "draft")
+            )
+          : setTasks([]);
       } catch (error) {
         console.error(
           "Error fetching tasks:",
@@ -68,55 +116,11 @@ function App() {
     <FormContext.Provider value={formContext}>
       <TimeContext.Provider value={timeContext}>
         <div className=" flex ">
-          <div className=" min-w-fit p-5 h-fit m-2 ml-0 bg-zinc-100 rounded-lg flex flex-col items-start ">
-            <ButtonComponent
-              // onClick={handleToggle}
-              onClick={setDisplayFormHandler}
-              context="کار جدید"
-              icon="add"
-              className="sideBar"
-            />
-            <ButtonComponent
-              context="پیش نویس"
-              icon="draft"
-              className="sideBar"
-            />
-            <ButtonComponent
-              context="کارهای امروز"
-              icon="today"
-              className="sideBar"
-            />
-            <ButtonComponent
-              context="همه کارها"
-              icon="week"
-              className="sideBar"
-            />
-            <hr class="border-t-2 border-gray-300 w-full max-w-md my-4" />
-            <ButtonComponent context="پروژه های من" className="sideBar" />
-            <ButtonComponent
-              context="شخصی"
-              icon="personal"
-              className="sideBar"
-            />
-            <ButtonComponent context="خانه" icon="home" className="sideBar" />
-            <ButtonComponent
-              context="شغلی"
-              icon="business"
-              className="sideBar"
-            />
-            <ButtonComponent context="ورزش" icon="sport" className="sideBar" />
-            <ButtonComponent
-              context="مطالعه"
-              icon="study"
-              className="sideBar"
-            />
-            <ButtonComponent
-              context="مناسبت"
-              icon="birthday"
-              className="sideBar"
-            />
-          </div>
-          <TaskListComponent tasks={tasks} deleteTask={handleDeleteTask} />
+          <SideBarComponent onClick={sideBarHandler} />
+          <TaskListComponent
+            tasks={customTasks}
+            deleteTask={handleDeleteTask}
+          />
           <div className={displayForm ? "" : " hidden"}>
             <AddFormComponent onAddTask={handleAddTask} />
           </div>
