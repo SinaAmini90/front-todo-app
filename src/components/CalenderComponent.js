@@ -5,10 +5,8 @@ import { TimeContext } from "../store/time-context.js";
 import { FormContext } from "../store/form-context.js";
 
 function CalendarComponent() {
-  const { displayForm, setDisplayForm } = useContext(FormContext);
-  const { setDeadLineDate, setDeadLineTime } = useContext(TimeContext);
-  const [classNameClick, setClassNameClick] = useState("");
-  const [deadLine, setDeadLine] = useState("");
+  const { displayForm } = useContext(FormContext);
+  const { setDeadLineDate } = useContext(TimeContext);
   const [selectedDate, setSelectedDate] = useState(null);
   const now = new Date();
   const year = now.getFullYear();
@@ -107,19 +105,30 @@ function CalendarComponent() {
     "اسفند",
   ];
   const dayNames = ["ش", "ی", "د", "س", "چ", "پ", "ج"];
-  const monthName = monthNames[jalaaliMonth - 1]; ///////////////////////////////////////////////
+  const monthName = monthNames[jalaaliMonth - 1];
   const onClickToday = () => {
     setSelectedDate(jalaaliDay);
     setJalaaliMonth(jalaaliDate.jm);
     setJalaaliYear(jalaaliDate.jy);
-    setDeadLineDate(jalaaliDay + monthName + jalaaliYear);
+    // setDeadLineDate(jalaaliDay + "-" + jalaaliMonth + "-" + jalaaliYear);
+    setDeadLineDate(
+      `${jalaaliYear}-${String(jalaaliMonth).padStart(2, "0")}-${String(
+        jalaaliDay
+      ).padStart(2, "0")}`
+    );
+    // jalaaliToGregorian(jalaaliDate.jy, jalaaliDate.jm, jalaaliDay);
   };
   const onClickTomarrow = () => {
     const tomarrow = jalaaliDay + 1;
     setSelectedDate(tomarrow);
     setJalaaliMonth(jalaaliDate.jm);
     setJalaaliYear(jalaaliDate.jy);
-    setDeadLineDate(tomarrow + monthName + jalaaliYear);
+    // setDeadLineDate(tomarrow + "-" + jalaaliMonth + "-" + jalaaliYear);
+    setDeadLineDate(
+      `${jalaaliYear}-${String(jalaaliMonth).padStart(2, "0")}-${String(
+        tomarrow
+      ).padStart(2, "0")}`
+    );
   };
   const onClickWeakend = () => {
     const today = getDayOfWeak(jalaaliDate.jy, jalaaliDate.jm, jalaaliDay);
@@ -132,7 +141,11 @@ function CalendarComponent() {
     setSelectedDate(weakend);
     setJalaaliMonth(jalaaliDate.jm);
     setJalaaliYear(jalaaliDate.jy);
-    setDeadLineDate(weakend + monthName + jalaaliYear);
+    setDeadLineDate(
+      `${jalaaliYear}-${String(jalaaliMonth).padStart(2, "0")}-${String(
+        weakend
+      ).padStart(2, "0")}`
+    );
   };
 
   const onClickPastMonth = () => {
@@ -233,7 +246,12 @@ function CalendarComponent() {
           <ButtonComponent
             key={index}
             onClick={() => {
-              setDeadLineDate(dayNumber + monthName + jalaaliYear);
+              setDeadLineDate(
+                `${jalaaliYear}-${String(jalaaliMonth).padStart(
+                  2,
+                  "0"
+                )}-${String(dayNumber).padStart(2, "0")}`
+              );
               setSelectedDate(dayNumber);
             }}
             type="button"
@@ -249,7 +267,12 @@ function CalendarComponent() {
           <ButtonComponent
             key={index}
             onClick={() => {
-              setDeadLineDate(dayNumber + monthName + jalaaliYear);
+              setDeadLineDate(
+                `${jalaaliYear}-${String(jalaaliMonth).padStart(
+                  2,
+                  "0"
+                )}-${String(dayNumber).padStart(2, "0")}`
+              );
               setSelectedDate(dayNumber);
             }}
             type="button"
