@@ -21,7 +21,7 @@ function AddFormComponent({ onAddTask, classNameAdd }) {
   // const [reminderMinute, setReminderMinute] = useState("00"); (**about reminder time ** develop later**)
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [isFirstRender, setIsFirstRender] = useState(true);
+  // const [isFirstRender, setIsFirstRender] = useState(true);
   const [priority, setPriority] = useState("default");
   const [category, setCategory] = useState("");
 

@@ -5,7 +5,6 @@ export default function SideBarComponent({ onClick }) {
   return (
     <div className=" min-w-fit p-5 h-fit m-2 ml-0 bg-zinc-100 rounded-lg flex flex-col items-start ">
       <ButtonComponent
-        // onClick={handleToggle}
         onClick={() => onClick("new task")}
         context="کار جدید"
         icon="add"
