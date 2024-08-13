@@ -10,7 +10,6 @@ function TaskListComponent({ tasks, deleteTask }) {
     "bg-yellow-100", //medium 2
     "bg-red-100", //high 3
   ];
-
   // two type of layout for todos list.
   const [liTagClass, setliTagClass] = useState(true);
   const flexTypeHandler = () => {
@@ -21,6 +20,14 @@ function TaskListComponent({ tasks, deleteTask }) {
     ? " w-52 h-52 flex-col "
     : " max-w-2xl w-full items-center";
 
+  const sortedTasks = tasks.sort(
+    (a, b) => new Date(a.deadlinedate) - new Date(b.deadlinedate)
+  );
+  // console.log(new Date(tasks[1].deadlinedate));
+  console.log(sortedTasks);
+  // console.log(tasks[1].deadlinedate - tasks[0].deadlinedate);
+  // console.log(new Date("1403-05-08") - new Date("1403-05-09"));
+
   return (
     <div className="min-w-96 w-full p-5 m-2 bg-zinc-50 rounded-lg ">
       <div className="flex justify-between">
@@ -30,8 +37,15 @@ function TaskListComponent({ tasks, deleteTask }) {
           onClick={flexTypeHandler}
         />
       </div>
+      <div className="flex">
+        <hr class="border-t-2 border-gray-300 w-10 ml-4 my-4" />
+        <span className=" text-gray-400">
+          {tasks.length > 0 ? tasks[0].deadlinedate : ""}
+        </span>
+        <hr class="border-t-2 border-gray-300 w-full mr-4  my-4" />
+      </div>
       <ul className=" flex flex-wrap gap-4 ">
-        {tasks.map((task) => (
+        {sortedTasks.map((task) => (
           <li
             key={task.key}
             className={`flex p-4 rounded-lg shadow-md ${liTagClassAdd} ${
@@ -44,7 +58,9 @@ function TaskListComponent({ tasks, deleteTask }) {
               <h3 className="text-sm font-semibold mb-1 truncate">
                 {task.title}
                 {task.deadlinedate && " _ "}
-                {task.deadlinedate}
+                <span style={{ unicodeBidi: "embed", direction: "ltr" }}>
+                  {task.deadlinedate}
+                </span>
                 {task.deadlinetime && " _ "}
                 {task.deadlinetime}
               </h3>
