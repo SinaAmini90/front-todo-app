@@ -6,14 +6,15 @@ import { FormContext } from "./store/form-context.js";
 import AddFormComponent from "./components/AddFormComponent.js";
 import TaskListComponent from "./components/taskListComponent.js";
 import SideBarComponent from "./components/SideBarComponent.js";
+import NavBarComponent from "./components/NavBarComponent.js";
 
 function App() {
   const [displayForm, setDisplayForm] = useState(false);
   // const [reminderTime, setReminderTime] = useState(""); (**about reminder time ** develop later**)
   const [deadLineDate, setDeadLineDate] = useState("");
   const [deadLineTime, setDeadLineTime] = useState("");
-  const [tasks, setTasks] = useState([]);
-  const [customTasks, setCustomTasks] = useState([]);
+  const [tasks, setTasks] = useState([]); //all tasks recive from database
+  const [customTasks, setCustomTasks] = useState([]); //all tasks we can modify theme
 
   const sideBarHandler = (context) => {
     switch (context) {
@@ -115,14 +116,17 @@ function App() {
   return (
     <FormContext.Provider value={formContext}>
       <TimeContext.Provider value={timeContext}>
-        <div className=" flex ">
-          <SideBarComponent onClick={sideBarHandler} />
-          <TaskListComponent
-            tasks={customTasks}
-            deleteTask={handleDeleteTask}
-          />
-          <div className={displayForm ? "" : " hidden"}>
-            <AddFormComponent onAddTask={handleAddTask} />
+        <div className=" pt-2 bg-slate-700">
+          <NavBarComponent />
+          <div className=" flex ">
+            <SideBarComponent onClick={sideBarHandler} />
+            <TaskListComponent
+              tasks={customTasks}
+              deleteTask={handleDeleteTask}
+            />
+            <div className={displayForm ? "" : " hidden"}>
+              <AddFormComponent onAddTask={handleAddTask} />
+            </div>
           </div>
         </div>
       </TimeContext.Provider>

@@ -3,7 +3,7 @@ import ButtonComponent from "./ButtonComponent";
 export default function SideBarComponent({ onClick }) {
   //   const onClickHandler = onClick;
   return (
-    <div className=" min-w-fit p-5 h-fit m-2 ml-0 bg-zinc-100 rounded-lg flex flex-col items-start ">
+    <div className=" min-w-fit p-5 h-screen m-2 ml-0 bg-zinc-100 rounded-lg flex flex-col items-start ">
       <ButtonComponent
         onClick={() => onClick("new task")}
         context="کار جدید"
