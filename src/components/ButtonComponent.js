@@ -29,6 +29,22 @@ export default function ButtonComponent({
   let classVlaue = "rounded-lg";
   // pulsar icon in website: https://icons8.com/
   let clipArts = {
+    signup: {
+      src: "https://img.icons8.com/pulsar-line/96/add-user-male.png",
+      alt: "signup",
+    },
+    logout: {
+      src: "https://img.icons8.com/pulsar-line/48/exit.png",
+      alt: "logout",
+    },
+    login: {
+      src: "https://img.icons8.com/pulsar-line/48/login-rounded.png",
+      alt: "login",
+    },
+    account: {
+      src: "https://img.icons8.com/pulsar-line/96/guest-male.png",
+      alt: "account",
+    },
     category: {
       src: "https://img.icons8.com/pulsar-color/96/opened-folder.png",
       alt: "category",
