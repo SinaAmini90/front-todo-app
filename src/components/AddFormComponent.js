@@ -26,12 +26,12 @@ function AddFormComponent({ onAddTask, classNameAdd }) {
   const [category, setCategory] = useState("");
 
   //this two useEffect help together to wont run in first rendering
-  // useEffect(() => {
-  //   setDeadLineTime(`${hour}:${minute}`);
-  //   // if (!isFirstRender) {
+  useEffect(() => {
+    setDeadLineTime(`${hour}:${minute}`);
+    // if (!isFirstRender) {
 
-  //   // }
-  // }, [hour, minute]);
+    // }
+  }, [hour, minute]);
   // (**about reminder time ** develop later**)
   // useEffect(() => {
   //   if (isFirstRender) {
@@ -105,6 +105,26 @@ function AddFormComponent({ onAddTask, classNameAdd }) {
     const value = event.target.value;
     setCategory(value);
   };
+
+  const handleMinuteChange = (e) => {
+    const minute = Number(e.target.value);
+    if (!isNaN(minute) && minute < 60 && minute >= 0) {
+      const minuteFormated = minute < 10 ? `0${minute}` : `${minute}`;
+      setMinute(minuteFormated);
+    } else {
+      setMinute("00");
+    }
+  };
+  const handleHourChange = (e) => {
+    console.log(e.target.value);
+    const hour = Number(e.target.value);
+    if (!isNaN(hour) && hour < 24 && hour >= 0) {
+      const hourFormated = hour < 10 ? `0${hour}` : `${hour}`;
+      setHour(hourFormated);
+    } else {
+      setHour("00");
+    }
+  };
   return (
     <div className={classVlaue + classNameAdd}>
       <div className="bg-white rounded-lg border m-6 p-6 w-fit">
@@ -139,10 +159,10 @@ function AddFormComponent({ onAddTask, classNameAdd }) {
                   icon="clock"
                   className="none"
                 />
-                <div className="flex align-middle justify-center gap-2">
+                <div className="flex align-middle justify-center gap-1 ">
                   <InputComponent
                     value={minute}
-                    onChange={(e) => setMinute(e.target.value)}
+                    onChange={handleMinuteChange}
                     context="00"
                   />
                   <p>:</p>
