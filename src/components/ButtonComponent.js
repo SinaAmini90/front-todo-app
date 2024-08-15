@@ -34,11 +34,11 @@ export default function ButtonComponent({
       alt: "signup",
     },
     logout: {
-      src: "https://img.icons8.com/pulsar-line/48/exit.png",
+      src: "https://img.icons8.com/pulsar-line/96/exit.png",
       alt: "logout",
     },
     login: {
-      src: "https://img.icons8.com/pulsar-line/48/login-rounded.png",
+      src: "https://img.icons8.com/pulsar-line/96/login-rounded.png",
       alt: "login",
     },
     account: {
@@ -50,27 +50,27 @@ export default function ButtonComponent({
       alt: "category",
     },
     birthday: {
-      src: "https://img.icons8.com/pulsar-color/48/birthday.png",
+      src: "https://img.icons8.com/pulsar-color/96/birthday.png",
       alt: "birthday",
     },
     study: {
-      src: "https://img.icons8.com/pulsar-color/48/learning.png",
+      src: "https://img.icons8.com/pulsar-color/96/learning.png",
       alt: "learning",
     },
     sport: {
-      src: "https://img.icons8.com/pulsar-color/48/sports.png",
+      src: "https://img.icons8.com/pulsar-color/96/sports.png",
       alt: "sports",
     },
     business: {
-      src: "https://img.icons8.com/pulsar-color/48/money-bag-euro.png",
+      src: "https://img.icons8.com/pulsar-color/96/money-bag-euro.png",
       alt: "business",
     },
     home: {
-      src: "https://img.icons8.com/pulsar-color/48/home-page.png",
+      src: "https://img.icons8.com/pulsar-color/96/home-page.png",
       alt: "home",
     },
     personal: {
-      src: "https://img.icons8.com/pulsar-color/48/user-male-circle.png",
+      src: "https://img.icons8.com/pulsar-color/96/user-male-circle.png",
       alt: "personal",
     },
     week: {
@@ -86,7 +86,7 @@ export default function ButtonComponent({
       alt: "draft",
     },
     exit: {
-      src: "https://img.icons8.com/pulsar-color/48/close-window.png",
+      src: "https://img.icons8.com/pulsar-color/96/close-window.png",
       alt: "exit",
     },
     repeat: {
@@ -106,7 +106,7 @@ export default function ButtonComponent({
       alt: "checkmark",
     },
     back: {
-      src: "https://img.icons8.com/pulsar-color/48/back.png",
+      src: "https://img.icons8.com/pulsar-color/96/back.png",
       // "https://img.icons8.com/plasticine/96/back.png",
       alt: "back",
     },
@@ -119,11 +119,11 @@ export default function ButtonComponent({
       alt: "alarm",
     },
     priority: {
-      src: "https://img.icons8.com/pulsar-color/48/high-priority.png",
+      src: "https://img.icons8.com/pulsar-color/96/high-priority.png",
       alt: "priority",
     },
     add: {
-      src: "https://img.icons8.com/pulsar-color/48/add.png",
+      src: "https://img.icons8.com/pulsar-color/96/add.png",
       alt: "add",
     },
   };
