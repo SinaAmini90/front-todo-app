@@ -9,6 +9,13 @@ function NavBarComponent({ isSignin }) {
   const [password, setPassword] = useState("");
   const [displayAccountModal, setDisplayAccountModal] = useState(false);
   const [displaySigninModal, setDisplaySigninModal] = useState(false);
+  const [accountButtonName, setAccountButtonName] = useState("ثبت نام");
+  const [isSigninForNav, setIsSigninForNav] = useState(false);
+  const [signinButtonName, setSigninButtonName] = useState("ورود به کاربری");
+  const tokenStorage = JSON.parse(localStorage.getItem("token"));
+  const familyName = tokenStorage.name;
+  console.log("tokenStorage", tokenStorage.name);
+
   const accountToggle = () => {
     setDisplayAccountModal((perv) => !perv);
   };
@@ -29,6 +36,9 @@ function NavBarComponent({ isSignin }) {
     localStorage.setItem("token", JSON.stringify(dataToken));
     console.log("token==>", decodedToken);
     setDisplaySigninModal((perv) => !perv);
+    setAccountButtonName(decodedToken.name);
+    setSigninButtonName("خروج از کاربری");
+    setIsSigninForNav((perv) => !perv);
   };
   const signinToggle = () => {
     setDisplaySigninModal((perv) => !perv);
@@ -123,20 +133,19 @@ function NavBarComponent({ isSignin }) {
         </div>
       </div>
       {/* -----------------navbar------------------ */}
-      <div>sina amini</div>
-      <div className="flex gap-5 ">
+      <div className="flex gap-5 w-full justify-end ">
         <ButtonComponent
           onClick={signinToggle}
-          context="ورود به کاربری" //"خروج از کاربری"
-          icon="login" //"logout"
+          context={signinButtonName}
+          icon={isSigninForNav ? "logout" : "login"}
           className="sidebar"
           classImgAdd=" w-5 h-5 ml-1"
           classNameAdd=" text-slate-800 text-sm"
         />
         <ButtonComponent
           onClick={accountToggle}
-          context="ثبت نام" //"حساب کاربری"
-          icon="signup" //"account"
+          context={isSigninForNav ? tokenStorage.name : "ثبت نام"}
+          icon={isSigninForNav ? "account" : "signup"}
           className="sidebar"
           classImgAdd=" w-5 h-5 ml-1"
           classNameAdd=" text-slate-800 text-sm"
