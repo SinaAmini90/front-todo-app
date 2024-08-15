@@ -15,6 +15,7 @@ function App() {
   const [deadLineTime, setDeadLineTime] = useState("");
   const [tasks, setTasks] = useState([]); //all tasks recive from database
   const [customTasks, setCustomTasks] = useState([]); //all tasks we can modify theme
+  const [isSignin, setIsSignin] = useState(false);
 
   const sideBarHandler = (context) => {
     switch (context) {
@@ -93,31 +94,40 @@ function App() {
   };
   //
   useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const fetchedTasks = await getTasks();
-        fetchedTasks ? setTasks(fetchedTasks) : setTasks([]);
-        fetchedTasks
-          ? setCustomTasks(
-              fetchedTasks.filter((task) => task.category !== "draft")
-            )
-          : setTasks([]);
-      } catch (error) {
-        console.error(
-          "Error fetching tasks:",
-          error.response ? error.response.data : error.message
-        );
-      }
-    };
+    if (isSignin) {
+      const fetchTasks = async () => {
+        try {
+          const fetchedTasks = await getTasks();
+          fetchedTasks ? setTasks(fetchedTasks) : setTasks([]);
+          fetchedTasks
+            ? setCustomTasks(
+                fetchedTasks.filter((task) => task.category !== "draft")
+              )
+            : setTasks([]);
+        } catch (error) {
+          console.error(
+            "Error fetching tasks:",
+            error.response ? error.response.data : error.message
+          );
+        }
+      };
 
-    fetchTasks();
-  }, []);
+      fetchTasks();
+    } else {
+      setTasks([]);
+      setCustomTasks([]);
+    }
+  }, [isSignin]);
+  const handleSignin = () => {
+    console.log("signin");
+    setIsSignin((perv) => !perv);
+  };
 
   return (
     <FormContext.Provider value={formContext}>
       <TimeContext.Provider value={timeContext}>
         <div className=" pt-2 bg-slate-700">
-          <NavBarComponent />
+          <NavBarComponent isSignin={handleSignin} />
           <div className=" flex ">
             <SideBarComponent onClick={sideBarHandler} />
             <TaskListComponent
