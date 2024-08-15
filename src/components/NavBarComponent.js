@@ -4,7 +4,7 @@ import ButtonComponent from "./ButtonComponent.js";
 import InputComponent from "./InputComponent.js";
 import { signin } from "../api/userAPI.js";
 
-function NavBarComponent() {
+function NavBarComponent({ isSignin }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [displayAccountModal, setDisplayAccountModal] = useState(false);
@@ -20,6 +20,13 @@ function NavBarComponent() {
     };
     const token = await signin(signinData);
     const decodedToken = jwtDecode(token);
+    const dataToken = {
+      id: decodedToken.id,
+      name: decodedToken.name,
+      username: decodedToken.username,
+      jwt: token,
+    };
+    localStorage.setItem("token", JSON.stringify(dataToken));
     console.log("token==>", decodedToken);
     setDisplaySigninModal((perv) => !perv);
   };
@@ -61,7 +68,10 @@ function NavBarComponent() {
             <ButtonComponent
               className="action"
               context="ورود به کاربری"
-              onClick={signinHandler}
+              onClick={async () => {
+                await signinHandler();
+                isSignin();
+              }}
             />
           </div>
         </div>
