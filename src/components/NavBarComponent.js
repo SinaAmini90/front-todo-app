@@ -7,17 +7,29 @@ import { signin } from "../api/userAPI.js";
 function NavBarComponent({ isSignin }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [displayRegisterModal, setDisplayRegisterModal] = useState(false);
   const [displayAccountModal, setDisplayAccountModal] = useState(false);
   const [displaySigninModal, setDisplaySigninModal] = useState(false);
+  const [displaySignoutModal, setDisplaySignoutModal] = useState(false);
   const [accountButtonName, setAccountButtonName] = useState("ثبت نام");
   const [isSigninForNav, setIsSigninForNav] = useState(false);
   const [signinButtonName, setSigninButtonName] = useState("ورود به کاربری");
   const tokenStorage = JSON.parse(localStorage.getItem("token"));
-  const familyName = tokenStorage.name;
-  console.log("tokenStorage", tokenStorage.name);
+  const familyName = tokenStorage ? tokenStorage.name : "";
+  const bearerToken = tokenStorage ? `Bearer ${tokenStorage.jwt}` : "";
+  console.log(tokenStorage);
 
+  const registerToggle = () => {
+    setDisplayRegisterModal((perv) => !perv);
+  };
   const accountToggle = () => {
     setDisplayAccountModal((perv) => !perv);
+  };
+  const signinToggle = () => {
+    setDisplaySigninModal((perv) => !perv);
+  };
+  const signoutToggle = () => {
+    setDisplaySignoutModal((perv) => !perv);
   };
 
   const signinHandler = async () => {
@@ -40,11 +52,58 @@ function NavBarComponent({ isSignin }) {
     setSigninButtonName("خروج از کاربری");
     setIsSigninForNav((perv) => !perv);
   };
-  const signinToggle = () => {
-    setDisplaySigninModal((perv) => !perv);
+
+  const signoutHandler = async () => {
+    localStorage.removeItem("token");
+    setDisplaySignoutModal((perv) => !perv);
+    setIsSigninForNav((perv) => !perv);
   };
+
   return (
     <div className=" flex justify-between py-3 px-10 mx-2 bg-zinc-100 rounded-lg ">
+      {/* -----------------navbar------------------ */}
+      <div className="flex gap-5 w-full justify-end ">
+        <ButtonComponent
+          onClick={signinToggle}
+          context="ورود به کاربری"
+          icon="login"
+          className="sidebar"
+          classImgAdd=" w-5 h-5 ml-1"
+          classNameAdd={` ${
+            isSigninForNav ? "hidden" : ""
+          } text-slate-800 text-sm`}
+        />
+        <ButtonComponent
+          onClick={registerToggle}
+          context="ثبت نام"
+          icon="signup"
+          className="sidebar"
+          classImgAdd=" w-5 h-5 ml-1"
+          classNameAdd={` ${
+            isSigninForNav ? "hidden" : ""
+          } text-slate-800 text-sm`}
+        />
+        <ButtonComponent
+          onClick={signoutToggle}
+          context="خروج از کاربری"
+          icon="logout"
+          className="sidebar"
+          classImgAdd=" w-5 h-5 ml-1"
+          classNameAdd={` ${
+            isSigninForNav ? "" : "hidden"
+          } text-slate-800 text-sm`}
+        />
+        <ButtonComponent
+          onClick={accountToggle}
+          context={familyName ? familyName : "حساب کاربری"}
+          icon="account"
+          className="sidebar"
+          classImgAdd=" w-5 h-5 ml-1"
+          classNameAdd={` ${
+            isSigninForNav ? "" : "hidden"
+          } text-slate-800 text-sm`}
+        />
+      </div>
       {/* -------signin and signout part---------- */}
       <div
         className={`${
@@ -86,10 +145,37 @@ function NavBarComponent({ isSignin }) {
           </div>
         </div>
       </div>
-      {/* -------account handle part--------- */}
+      {/* -------signout part modal---------- */}
       <div
         className={`${
-          displayAccountModal ? "" : "hidden"
+          displaySignoutModal ? "" : "hidden"
+        } fixed inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center`}
+      >
+        <div className="flex flex-col gap-2 bg-white rounded-lg border m-6 p-6 w-80">
+          <p className="text-lg font-bold">
+            آیا قصد خروج از حساب خود را دارید؟
+          </p>
+          <div className="flex justify-center gap-4">
+            <ButtonComponent
+              className="action"
+              context="انصراف"
+              onClick={signoutToggle}
+            />
+            <ButtonComponent
+              className="action"
+              context="خروج از کاربری"
+              onClick={async () => {
+                await signoutHandler();
+                isSignin();
+              }}
+            />
+          </div>
+        </div>
+      </div>
+      {/* -------register handle part--------- */}
+      <div
+        className={`${
+          displayRegisterModal ? "" : "hidden"
         } fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center`}
       >
         <div className="flex flex-col gap-2 bg-white rounded-lg border m-6 p-6 w-80">
@@ -122,34 +208,15 @@ function NavBarComponent({ isSignin }) {
             <ButtonComponent
               className="action"
               context="انصراف"
-              onClick={accountToggle}
+              onClick={registerToggle}
             />
             <ButtonComponent
               className="action"
-              context="ورود به کاربری"
-              onClick={accountToggle}
+              context="ثبت نام"
+              onClick={registerToggle}
             />
           </div>
         </div>
-      </div>
-      {/* -----------------navbar------------------ */}
-      <div className="flex gap-5 w-full justify-end ">
-        <ButtonComponent
-          onClick={signinToggle}
-          context={signinButtonName}
-          icon={isSigninForNav ? "logout" : "login"}
-          className="sidebar"
-          classImgAdd=" w-5 h-5 ml-1"
-          classNameAdd=" text-slate-800 text-sm"
-        />
-        <ButtonComponent
-          onClick={accountToggle}
-          context={isSigninForNav ? tokenStorage.name : "ثبت نام"}
-          icon={isSigninForNav ? "account" : "signup"}
-          className="sidebar"
-          classImgAdd=" w-5 h-5 ml-1"
-          classNameAdd=" text-slate-800 text-sm"
-        />
       </div>
     </div>
   );
