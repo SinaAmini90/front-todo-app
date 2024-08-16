@@ -1,12 +1,14 @@
 import "./App.css";
 import React, { useState, useEffect } from "react";
 import { getTasks, deleteTask, createTask } from "./api/taskAPI.js";
+import { SigninContext } from "./store/auth-context.js";
 import { TimeContext } from "./store/time-context.js";
 import { FormContext } from "./store/form-context.js";
 import AddFormComponent from "./components/AddFormComponent.js";
 import TaskListComponent from "./components/taskListComponent.js";
 import SideBarComponent from "./components/SideBarComponent.js";
 import NavBarComponent from "./components/NavBarComponent.js";
+import { signin } from "./api/userAPI.js";
 
 function App() {
   const [displayForm, setDisplayForm] = useState(false);
@@ -15,7 +17,7 @@ function App() {
   const [deadLineTime, setDeadLineTime] = useState("");
   const [tasks, setTasks] = useState([]); //all tasks recive from database
   const [customTasks, setCustomTasks] = useState([]); //all tasks we can modify theme
-  const [isSignin, setIsSignin] = useState(false);
+  const [isSignin, setIsSignin] = useState();
 
   const sideBarHandler = (context) => {
     switch (context) {
@@ -68,6 +70,13 @@ function App() {
   const setDeadLineTimeHandler = (time) => {
     setDeadLineTime(time);
   };
+  const setIsSigninHandler = () => {
+    setIsSignin((perv) => !perv);
+  };
+  const signinContect = {
+    isSignin,
+    setIsSignin: setIsSigninHandler,
+  };
   const formContext = {
     displayForm,
     setDisplayForm: setDisplayFormHandler,
@@ -94,53 +103,50 @@ function App() {
   };
   //
   useEffect(() => {
-    if (isSignin) {
-      const fetchTasks = async () => {
-        try {
-          const fetchedTasks = await getTasks();
-          fetchedTasks ? setTasks(fetchedTasks) : setTasks([]);
-          fetchedTasks
-            ? setCustomTasks(
-                fetchedTasks.filter((task) => task.category !== "draft")
-              )
-            : setTasks([]);
-        } catch (error) {
-          console.error(
-            "Error fetching tasks:",
-            error.response ? error.response.data : error.message
-          );
-        }
-      };
+    const fetchTasks = async () => {
+      try {
+        const fetchedTasks = await getTasks();
+        fetchedTasks ? setTasks(fetchedTasks) : setTasks([]);
+        fetchedTasks
+          ? setCustomTasks(
+              fetchedTasks.filter((task) => task.category !== "draft")
+            )
+          : setTasks([]);
+      } catch (error) {
+        console.error(
+          "Error fetching tasks:",
+          error.response ? error.response.data : error.message
+        );
+      }
+    };
 
-      fetchTasks();
-    } else {
-      setTasks([]);
-      setCustomTasks([]);
-    }
-  }, [isSignin]);
+    fetchTasks();
+  }, []);
   const handleSignin = () => {
     console.log("signin");
     setIsSignin((perv) => !perv);
   };
 
   return (
-    <FormContext.Provider value={formContext}>
-      <TimeContext.Provider value={timeContext}>
-        <div className=" pt-2 bg-slate-700">
-          <NavBarComponent isSignin={handleSignin} />
-          <div className=" flex ">
-            <SideBarComponent onClick={sideBarHandler} />
-            <TaskListComponent
-              tasks={customTasks}
-              deleteTask={handleDeleteTask}
-            />
-            <div className={displayForm ? "" : " hidden"}>
-              <AddFormComponent onAddTask={handleAddTask} />
+    <SigninContext.Provider value={signinContect}>
+      <FormContext.Provider value={formContext}>
+        <TimeContext.Provider value={timeContext}>
+          <div className=" pt-2 bg-slate-700">
+            <NavBarComponent isSignin={handleSignin} />
+            <div className=" flex ">
+              <SideBarComponent onClick={sideBarHandler} />
+              <TaskListComponent
+                tasks={customTasks}
+                deleteTask={handleDeleteTask}
+              />
+              <div className={displayForm ? "" : " hidden"}>
+                <AddFormComponent onAddTask={handleAddTask} />
+              </div>
             </div>
           </div>
-        </div>
-      </TimeContext.Provider>
-    </FormContext.Provider>
+        </TimeContext.Provider>
+      </FormContext.Provider>
+    </SigninContext.Provider>
   );
 }
 

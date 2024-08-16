@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import ButtonComponent from "./ButtonComponent.js";
 import InputComponent from "./InputComponent.js";
@@ -11,13 +11,18 @@ function NavBarComponent({ isSignin }) {
   const [displayAccountModal, setDisplayAccountModal] = useState(false);
   const [displaySigninModal, setDisplaySigninModal] = useState(false);
   const [displaySignoutModal, setDisplaySignoutModal] = useState(false);
-  const [accountButtonName, setAccountButtonName] = useState("ثبت نام");
   const [isSigninForNav, setIsSigninForNav] = useState(false);
-  const [signinButtonName, setSigninButtonName] = useState("ورود به کاربری");
+  const [signinModalText, setSigninModalText] = useState("");
   const tokenStorage = JSON.parse(localStorage.getItem("token"));
   const familyName = tokenStorage ? tokenStorage.name : "";
   const bearerToken = tokenStorage ? `Bearer ${tokenStorage.jwt}` : "";
-  console.log(tokenStorage);
+
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      setDisplaySigninModal(false);
+      setIsSigninForNav(true);
+    }
+  }, []);
 
   const registerToggle = () => {
     setDisplayRegisterModal((perv) => !perv);
@@ -31,8 +36,9 @@ function NavBarComponent({ isSignin }) {
   const signoutToggle = () => {
     setDisplaySignoutModal((perv) => !perv);
   };
-
   const signinHandler = async () => {
+    setSigninModalText("در حال بررسی اطلاعات...");
+
     const signinData = {
       username: username,
       password: password,
@@ -46,17 +52,14 @@ function NavBarComponent({ isSignin }) {
       jwt: token,
     };
     localStorage.setItem("token", JSON.stringify(dataToken));
-    console.log("token==>", decodedToken);
-    setDisplaySigninModal((perv) => !perv);
-    setAccountButtonName(decodedToken.name);
-    setSigninButtonName("خروج از کاربری");
-    setIsSigninForNav((perv) => !perv);
+    window.location.reload();
   };
 
   const signoutHandler = async () => {
     localStorage.removeItem("token");
-    setDisplaySignoutModal((perv) => !perv);
-    setIsSigninForNav((perv) => !perv);
+    setDisplaySignoutModal(false);
+    setIsSigninForNav(false);
+    window.location.reload();
   };
 
   return (
@@ -104,7 +107,7 @@ function NavBarComponent({ isSignin }) {
           } text-slate-800 text-sm`}
         />
       </div>
-      {/* -------signin and signout part---------- */}
+      {/* -------signin modal part---------- */}
       <div
         className={`${
           displaySigninModal ? "" : "hidden"
@@ -128,6 +131,7 @@ function NavBarComponent({ isSignin }) {
             onChange={(e) => setPassword(e.target.value)}
             classNameAdd=" w-full text-right mb-2 p-2 "
           />
+          <p className="">{signinModalText}</p>
           <div className="flex justify-center gap-4">
             <ButtonComponent
               className="action"
