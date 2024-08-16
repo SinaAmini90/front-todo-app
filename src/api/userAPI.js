@@ -10,4 +10,14 @@ async function signin(userData) {
   }
 }
 
-export { signin };
+async function createUser(userData) {
+  try {
+    const response = await api.post(`/user/signup`, userData);
+    return response.data;
+  } catch (error) {
+    console.error("Error signup user:", error);
+    throw error;
+  }
+}
+
+export { signin, createUser };
