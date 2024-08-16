@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import ButtonComponent from "./ButtonComponent.js";
 import InputComponent from "./InputComponent.js";
-import { signin } from "../api/userAPI.js";
+import { createUser, signin } from "../api/userAPI.js";
 
 function NavBarComponent({ isSignin }) {
   const [username, setUsername] = useState("");
@@ -13,6 +13,11 @@ function NavBarComponent({ isSignin }) {
   const [displaySignoutModal, setDisplaySignoutModal] = useState(false);
   const [isSigninForNav, setIsSigninForNav] = useState(false);
   const [signinModalText, setSigninModalText] = useState("");
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [phonenumber, setPhonenumber] = useState("");
+  const [email, setEmail] = useState("");
+  const [repeatPassword, setRepeatPassword] = useState("");
   const tokenStorage = JSON.parse(localStorage.getItem("token"));
   const familyName = tokenStorage ? tokenStorage.name : "";
   const bearerToken = tokenStorage ? `Bearer ${tokenStorage.jwt}` : "";
@@ -36,9 +41,9 @@ function NavBarComponent({ isSignin }) {
   const signoutToggle = () => {
     setDisplaySignoutModal((perv) => !perv);
   };
+
   const signinHandler = async () => {
     setSigninModalText("در حال بررسی اطلاعات...");
-
     const signinData = {
       username: username,
       password: password,
@@ -62,6 +67,26 @@ function NavBarComponent({ isSignin }) {
     window.location.reload();
   };
 
+  const registerHandler = async () => {
+    if (!password === repeatPassword) {
+      setSigninModalText("رمز را به صورت صحیح وارد کنید.");
+    }
+    setSigninModalText("در حال بررسی اطلاعات...");
+
+    const regData = {
+      firstname: firstname,
+      lastname: lastname,
+      phonenumber: phonenumber,
+      email: email,
+      username: username,
+      password: password,
+    };
+    const response = await createUser(regData);
+    console.log(response.success);
+    if (response.success) {
+      signinHandler();
+    }
+  };
   return (
     <div className=" flex justify-between py-3 px-10 mx-2 bg-zinc-100 rounded-lg ">
       {/* -----------------navbar------------------ */}
@@ -184,30 +209,75 @@ function NavBarComponent({ isSignin }) {
       >
         <div className="flex flex-col gap-2 bg-white rounded-lg border m-6 p-6 w-80">
           <p className="text-lg font-bold">فرم ثبت نام</p>
-          <InputComponent
-            context="نام کاربری"
-            name="username"
-            type="text"
-            // value={title}
-            // onChange={(e) => setTitle(e.target.value)}
-            classNameAdd=" w-full text-right p-2 "
-          />
-          <InputComponent
-            context="رمز عبور"
-            name="password"
-            type="text"
-            // value={title}
-            // onChange={(e) => setTitle(e.target.value)}
-            classNameAdd=" w-full text-right p-2 "
-          />
-          <InputComponent
-            context="تکرار رمز عبور"
-            name="password"
-            type="text"
-            // value={title}
-            // onChange={(e) => setTitle(e.target.value)}
-            classNameAdd=" w-full text-right mb-2 p-2 "
-          />
+          <fieldset className=" p-2 flex flex-col gap-1 border border-1 rounded-lg border-emerald-500">
+            <legend className=" text-sm italic">
+              مشخصات خود را وارد کنید (اختیاری):
+            </legend>
+            <InputComponent
+              context="نام"
+              name="firstname"
+              type="text"
+              value={firstname}
+              onChange={(e) => setFirstname(e.target.value)}
+              classNameAdd=" w-full text-right p-2 "
+            />
+            <InputComponent
+              context="نام خانوادگی"
+              name="lastname"
+              type="text"
+              value={lastname}
+              onChange={(e) => setLastname(e.target.value)}
+              classNameAdd=" w-full text-right p-2 "
+            />
+            <InputComponent
+              context="شماره تماس"
+              name="phonenumber"
+              type="text"
+              value={phonenumber}
+              onChange={(e) => setPhonenumber(e.target.value)}
+              classNameAdd=" w-full text-right p-2 "
+            />
+            <InputComponent
+              context="ایمیل"
+              name="email"
+              type="text"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              classNameAdd=" w-full text-right p-2 "
+            />
+          </fieldset>
+          <fieldset className=" p-2  flex flex-col gap-1 border border-1 rounded-lg border-amber-500">
+            <legend className=" text-sm italic">
+              {" "}
+              نام کاربری و رمز خود را انتخاب کنید (اجباری):
+            </legend>
+            <InputComponent
+              context="نام کاربری"
+              name="username"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              classNameAdd=" w-full text-right p-2 "
+            />
+            <InputComponent
+              context="رمز عبور"
+              name="password"
+              type="text"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              classNameAdd=" w-full text-right p-2 "
+            />
+            <InputComponent
+              context="تکرار رمز عبور"
+              name="repeatPassword"
+              type="text"
+              value={repeatPassword}
+              onChange={(e) => setRepeatPassword(e.target.value)}
+              classNameAdd=" w-full text-right mb-2 p-2 "
+            />
+          </fieldset>
+          <p className="">{signinModalText}</p>
+
           <div className="flex justify-center gap-4">
             <ButtonComponent
               className="action"
@@ -217,7 +287,7 @@ function NavBarComponent({ isSignin }) {
             <ButtonComponent
               className="action"
               context="ثبت نام"
-              onClick={registerToggle}
+              onClick={registerHandler}
             />
           </div>
         </div>
