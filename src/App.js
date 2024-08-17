@@ -18,6 +18,7 @@ function App() {
   const [tasks, setTasks] = useState([]); //all tasks recive from database
   const [customTasks, setCustomTasks] = useState([]); //all tasks we can modify theme
   const [isSignin, setIsSignin] = useState();
+  const [categoryClicked, setCategoryClicked] = useState("");
 
   const sideBarHandler = (context) => {
     switch (context) {
@@ -26,31 +27,40 @@ function App() {
         break;
       case "draft":
         setCustomTasks(tasks.filter((task) => task.category === "draft"));
+        setCategoryClicked(context);
         break;
       case "today tasks":
         const today = new Date().toISOString().split("T")[0];
         setCustomTasks(tasks.filter((task) => task.deadlineDate === today));
+        setCategoryClicked(context);
         break;
       case "all tasks":
         setCustomTasks(tasks.filter((task) => task.category !== "draft"));
+        setCategoryClicked(context);
         break;
       case "personal":
         setCustomTasks(tasks.filter((task) => task.category === "personal"));
+        setCategoryClicked(context);
         break;
       case "home":
         setCustomTasks(tasks.filter((task) => task.category === "home"));
+        setCategoryClicked(context);
         break;
       case "business":
         setCustomTasks(tasks.filter((task) => task.category === "business"));
+        setCategoryClicked(context);
         break;
       case "sport":
         setCustomTasks(tasks.filter((task) => task.category === "sport"));
+        setCategoryClicked(context);
         break;
       case "study":
         setCustomTasks(tasks.filter((task) => task.category === "study"));
+        setCategoryClicked(context);
         break;
       case "birthday":
         setCustomTasks(tasks.filter((task) => task.category === "birthday"));
+        setCategoryClicked(context);
         break;
       default:
         setCustomTasks([...tasks]);
@@ -138,6 +148,7 @@ function App() {
               <TaskListComponent
                 tasks={customTasks}
                 deleteTask={handleDeleteTask}
+                categoryClicked={categoryClicked}
               />
               <div className={displayForm ? "" : " hidden"}>
                 <AddFormComponent onAddTask={handleAddTask} />
