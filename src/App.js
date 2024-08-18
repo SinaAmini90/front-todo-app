@@ -1,6 +1,6 @@
 import "./App.css";
 import React, { useState, useEffect } from "react";
-import { getTasks, deleteTask, createTask } from "./api/taskAPI.js";
+import { getTasks, deleteTask, createTask, updateTask } from "./api/taskAPI.js";
 import { SigninContext } from "./store/auth-context.js";
 import { TimeContext } from "./store/time-context.js";
 import { FormContext } from "./store/form-context.js";
@@ -19,6 +19,7 @@ function App() {
   const [customTasks, setCustomTasks] = useState([]); //all tasks we can modify theme
   const [isSignin, setIsSignin] = useState();
   const [categoryClicked, setCategoryClicked] = useState("");
+  const [taskForEdit, setTaskForEdit] = useState("");
 
   const sideBarHandler = (context) => {
     switch (context) {
@@ -111,7 +112,35 @@ function App() {
       prevTasks.filter((task) => task.id !== taskId)
     );
   };
-  //
+  //edit handeling
+  const handelEditedTask = async (editedTask) => {
+    console.log("editedTask", editedTask);
+    await updateTask(editedTask);
+    setTasks((prevTasks) =>
+      prevTasks.filter((task) => task.id !== editedTask.id)
+    );
+    setCustomTasks((prevTasks) =>
+      prevTasks.filter((task) => task.id !== editedTask.id)
+    );
+    setTasks((prevTasks) => [...prevTasks, editedTask]);
+    setCustomTasks((prevTasks) => [...prevTasks, editedTask]);
+  };
+  const handelEditTask = async (taskId) => {
+    const task = tasks.filter((task) => task.id === taskId);
+    setTaskForEdit(task[0]);
+  };
+  useEffect(() => {
+    if (!displayForm) {
+      console.log("app");
+      setTaskForEdit("");
+      console.log("app");
+    }
+  }, [displayForm]);
+
+  useEffect(() => {
+    // console.log("Updated taskForEdit:", taskForEdit);
+  }, [taskForEdit]);
+  // get tasks in first time
   useEffect(() => {
     const fetchTasks = async () => {
       try {
@@ -129,7 +158,6 @@ function App() {
         );
       }
     };
-
     fetchTasks();
   }, []);
   const handleSignin = () => {
@@ -148,10 +176,15 @@ function App() {
               <TaskListComponent
                 tasks={customTasks}
                 deleteTask={handleDeleteTask}
+                editeTask={handelEditTask}
                 categoryClicked={categoryClicked}
               />
               <div className={displayForm ? "" : " hidden"}>
-                <AddFormComponent onAddTask={handleAddTask} />
+                <AddFormComponent
+                  onEditTask={handelEditedTask}
+                  onAddTask={handleAddTask}
+                  taskForEdit={taskForEdit}
+                />
               </div>
             </div>
           </div>

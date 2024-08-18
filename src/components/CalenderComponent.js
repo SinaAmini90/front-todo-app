@@ -4,8 +4,8 @@ import ButtonComponent from "./ButtonComponent";
 import { TimeContext } from "../store/time-context.js";
 import { FormContext } from "../store/form-context.js";
 
-function CalendarComponent() {
-  const { displayForm } = useContext(FormContext);
+function CalendarComponent({ taskEditDate }) {
+  const { displayForm, setDisplayForm } = useContext(FormContext);
   const { setDeadLineDate } = useContext(TimeContext);
   const [selectedDate, setSelectedDate] = useState(null);
   const now = new Date();
@@ -18,8 +18,25 @@ function CalendarComponent() {
   const jalaaliDay = jalaaliDate.jd;
 
   useEffect(() => {
+    if (taskEditDate) {
+      if (taskEditDate === "noTaskDate") {
+        setDisplayForm();
+      } else {
+        console.log("calender");
+        const [yyyy, mm, dd] = taskEditDate.split("-");
+        console.log(dd);
+        setDeadLineDate(taskEditDate);
+        setSelectedDate(Number(dd));
+        setDisplayForm();
+        console.log("calender");
+      }
+    }
+  }, [taskEditDate]);
+
+  useEffect(() => {
     if (!displayForm) {
-      setSelectedDate(null);
+      setSelectedDate("");
+      setDeadLineDate("");
     }
   }, [displayForm]);
 

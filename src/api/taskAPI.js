@@ -21,6 +21,16 @@ async function createTask(taskData) {
   }
 }
 
+async function updateTask(taskData) {
+  try {
+    const response = await api.put(`/task`, taskData);
+    return response.data;
+  } catch (error) {
+    console.error("Error editing tasks:", error);
+    throw error;
+  }
+}
+
 async function deleteTask(taskId) {
   try {
     const response = await api.delete(`/task/${taskId}`);
@@ -32,15 +42,4 @@ async function deleteTask(taskId) {
   }
 }
 
-async function editTask() {
-  try {
-    const response = await api.put(`/task`);
-    console.log(response.data);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching tasks:", error);
-    throw error;
-  }
-}
-
-export { createTask, editTask, deleteTask, getTasks };
+export { createTask, deleteTask, getTasks, updateTask };

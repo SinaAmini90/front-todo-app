@@ -7,7 +7,7 @@ import React, {
 import ButtonComponent from "./ButtonComponent.js";
 import { TimeContext } from "../store/time-context.js";
 
-function TaskListComponent({ tasks, deleteTask, categoryClicked }) {
+function TaskListComponent({ tasks, deleteTask, editeTask, categoryClicked }) {
   // const { deadLineTime, deadLineDate } = useContext(TimeContext);
   useEffect(() => {
     handleTextForEmptyList(categoryClicked);
@@ -131,8 +131,11 @@ function TaskListComponent({ tasks, deleteTask, categoryClicked }) {
                 icon="trash"
                 onClick={() => deleteTask(task.id)}
               />
-              <ButtonComponent icon="edit" />
-              <ButtonComponent icon="done" />
+              <ButtonComponent icon="edit" onClick={() => editeTask(task.id)} />
+              <ButtonComponent
+                icon="done"
+                onClick={() => deleteTask(task.id)}
+              />
             </div>
           </li>
         ))}

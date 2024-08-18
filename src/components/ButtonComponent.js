@@ -9,6 +9,7 @@ export default function ButtonComponent({
   classImgAdd,
   children,
   className,
+  disabled,
 }) {
   let classVlaueButtonTag = " flex items-center justify-center border-none ";
   switch (className) {
@@ -133,6 +134,7 @@ export default function ButtonComponent({
         className={classVlaueButtonTag + " bg-inherit"}
         onClick={onClick}
         type={type}
+        disabled={disabled}
       >
         {icon && (
           <img

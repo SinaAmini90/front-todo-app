@@ -5,7 +5,12 @@ import ButtonComponent from "./ButtonComponent.js";
 import { TimeContext } from "../store/time-context.js";
 import { FormContext } from "../store/form-context.js";
 
-function AddFormComponent({ onAddTask, classNameAdd }) {
+function AddFormComponent({
+  onAddTask,
+  onEditTask,
+  classNameAdd,
+  taskForEdit,
+}) {
   const {
     deadLineDate,
     deadLineTime,
@@ -21,17 +26,30 @@ function AddFormComponent({ onAddTask, classNameAdd }) {
   // const [reminderMinute, setReminderMinute] = useState("00"); (**about reminder time ** develop later**)
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  // const [isFirstRender, setIsFirstRender] = useState(true);
   const [priority, setPriority] = useState("default");
   const [category, setCategory] = useState("");
+  const [taskEditDate, setTaskEditDate] = useState("");
+
+  useEffect(() => {
+    if (taskForEdit) {
+      setTitle(taskForEdit.title);
+      setDescription(taskForEdit.description);
+      setPriority(taskForEdit.priority);
+      setCategory(taskForEdit.category);
+      const taskTime = taskForEdit.deadlinetime;
+      const [hh, mm] = taskTime.split(":");
+      hh > 0 ? setHour(hh) : setHour("00");
+      mm > 0 ? setMinute(mm) : setMinute("00");
+      const taskDate = taskForEdit.deadlinedate;
+      taskDate ? setTaskEditDate(taskDate) : setTaskEditDate("noTaskDate");
+    }
+  }, [taskForEdit]);
 
   //this two useEffect help together to wont run in first rendering
   useEffect(() => {
     setDeadLineTime(`${hour}:${minute}`);
-    // if (!isFirstRender) {
-
-    // }
   }, [hour, minute]);
+
   // (**about reminder time ** develop later**)
   // useEffect(() => {
   //   if (isFirstRender) {
@@ -53,10 +71,11 @@ function AddFormComponent({ onAddTask, classNameAdd }) {
       setDeadLineTime("");
       setPriority("default");
       setCategory("noGroup");
+      setTaskEditDate("");
     }
   }, [displayForm]);
 
-  // to get diffrent color for tasks base type of priority
+  // to get different color for tasks base type of priority
   const lowPriorityHandler = () => {
     setPriority("low");
   };
@@ -73,30 +92,47 @@ function AddFormComponent({ onAddTask, classNameAdd }) {
   const onExitHandler = () => {
     setDisplayForm();
   };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     deadLineTime === "00:00" && setDeadLineTime(() => "");
     // reminderTime === "00:00" && setReminderTime(() => ""); (**about reminder time ** develop later**)
-    if (title.trim()) {
-      const id = Math.floor(Date.now() * Math.random());
-      const newTask = {
-        key: id,
-        id: id,
-        title: title,
-        // `${title}${deadLineDate && " _ "}${deadLineDate}${
-        //   deadLineTime && " _ "
-        // }${deadLineTime}`,
-        description: description,
-        // `${description}${
-        //   reminderTime && "_ یادآوری: "
-        // }${reminderTime} ${reminderTime && " قبل"}`,
-        priority: priority,
-        category: category,
-        deadlinedate: deadLineDate,
-        deadlinetime: deadLineTime,
-        // reminderTime: reminderTime, (**about reminder time ** develop later**)
-      };
-      onAddTask(newTask);
+    if (taskForEdit) {
+      if (title.trim()) {
+        const editedTask = {
+          key: taskForEdit.id,
+          id: taskForEdit.id,
+          title: title,
+          description: description,
+          priority: priority,
+          category: category,
+          deadlinedate: deadLineDate,
+          deadlinetime: deadLineTime,
+        };
+        onEditTask(editedTask);
+      }
+    } else {
+      if (title.trim()) {
+        const id = Math.floor(Date.now() * Math.random());
+        const newTask = {
+          key: id,
+          id: id,
+          title: title,
+          // `${title}${deadLineDate && " _ "}${deadLineDate}${
+          //   deadLineTime && " _ "
+          // }${deadLineTime}`,
+          description: description,
+          // `${description}${
+          //   reminderTime && "_ یادآوری: "
+          // }${reminderTime} ${reminderTime && " قبل"}`,
+          priority: priority,
+          category: category,
+          deadlinedate: deadLineDate,
+          deadlinetime: deadLineTime,
+          // reminderTime: reminderTime, (**about reminder time ** develop later**)
+        };
+        onAddTask(newTask);
+      }
     }
     setDisplayForm();
   };
@@ -131,7 +167,7 @@ function AddFormComponent({ onAddTask, classNameAdd }) {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className=" ">
             <InputComponent
-              context="عنوان کار"
+              context="عنوان کار (پر کردن عنوان الزامی است.)"
               name="title"
               type="text"
               value={title}
@@ -149,7 +185,7 @@ function AddFormComponent({ onAddTask, classNameAdd }) {
           </div>
           <div className=" flex justify-between">
             <div className=" w-80">
-              <CalendarComponent />
+              <CalendarComponent taskEditDate={taskEditDate} />
             </div>
             <div className="flex flex-col gap-2 w-80">
               <div className="flex items-center ">
@@ -285,6 +321,15 @@ function AddFormComponent({ onAddTask, classNameAdd }) {
                   type="submit"
                   context="اضافه کردن کار"
                   className="action"
+                  classNameAdd={` ${taskEditDate ? "hidden" : ""}`}
+                  disabled={!title.trim()}
+                />
+                <ButtonComponent
+                  type="submit"
+                  context="ویرایش کار"
+                  className="action"
+                  classNameAdd={` ${taskEditDate ? "" : "hidden"}`}
+                  disabled={!title.trim()}
                 />
               </div>
             </div>
