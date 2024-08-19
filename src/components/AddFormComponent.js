@@ -322,16 +322,23 @@ function AddFormComponent({
                   context="اضافه کردن کار"
                   className="action"
                   classNameAdd={` ${taskEditDate ? "hidden" : ""}`}
-                  disabled={!title.trim()}
+                  disabled={!title.trim() || !deadLineDate}
                 />
                 <ButtonComponent
                   type="submit"
                   context="ویرایش کار"
                   className="action"
                   classNameAdd={` ${taskEditDate ? "" : "hidden"}`}
-                  disabled={!title.trim()}
+                  disabled={!title.trim() || !deadLineDate}
                 />
               </div>
+              <p
+                className={` ${
+                  !title.trim() || !deadLineDate ? "" : "hidden"
+                } pr-1 pt-3 text-sm text-red-600`}
+              >
+                توجه: پرکردن عنوان و انتخاب تاریخ الزامی است.
+              </p>
             </div>
           </div>
         </form>
