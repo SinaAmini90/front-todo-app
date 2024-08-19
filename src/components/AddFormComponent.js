@@ -321,14 +321,18 @@ function AddFormComponent({
                   type="submit"
                   context="اضافه کردن کار"
                   className="action"
-                  classNameAdd={` ${taskEditDate ? "hidden" : ""}`}
+                  classNameAdd={` ${
+                    !title.trim() || !deadLineDate ? "text-slate-400" : ""
+                  } ${taskEditDate ? "hidden" : ""}`}
                   disabled={!title.trim() || !deadLineDate}
                 />
                 <ButtonComponent
                   type="submit"
                   context="ویرایش کار"
                   className="action"
-                  classNameAdd={` ${taskEditDate ? "" : "hidden"}`}
+                  classNameAdd={` ${
+                    !title.trim() || !deadLineDate ? "text-slate-400" : ""
+                  } ${taskEditDate ? "" : "hidden"}`}
                   disabled={!title.trim() || !deadLineDate}
                 />
               </div>

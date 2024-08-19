@@ -15,15 +15,15 @@ export default function ButtonComponent({
   switch (className) {
     case "sideBar":
       classVlaueButtonTag =
-        "hover:scale-110 duration-200 whitespace-nowrap border-none text-slate-900 font-bold py-2 px-4 rounded-lg ";
+        "hover:scale-110 duration-200 whitespace-nowrap border-none font-bold py-2 px-4 rounded-lg ";
       break;
     case "action":
       classVlaueButtonTag =
-        " hover:scale-110 duration-200 whitespace-nowrap text-slate-900 font-bold py-2 px-4 rounded-lg shadow-md";
+        " hover:scale-110 duration-200 whitespace-nowrap font-bold py-2 px-4 rounded-lg shadow-md";
       break;
     case "none":
       classVlaueButtonTag = //cursor-default
-        " cursor-default border-none rounded whitespace-nowrap text-slate-900 font-bold px-2 py-2";
+        " cursor-default border-none rounded whitespace-nowrap font-bold px-2 py-2";
       break;
   }
 
