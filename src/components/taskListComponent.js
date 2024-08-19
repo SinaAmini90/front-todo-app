@@ -7,7 +7,7 @@ import React, {
 import ButtonComponent from "./ButtonComponent.js";
 import { TimeContext } from "../store/time-context.js";
 
-function TaskListComponent({ tasks, deleteTask, editeTask, categoryClicked }) {
+function TaskListComponent({ tasks, deleteTask, editTask, categoryClicked }) {
   // const { deadLineTime, deadLineDate } = useContext(TimeContext);
   useEffect(() => {
     handleTextForEmptyList(categoryClicked);
@@ -78,7 +78,7 @@ function TaskListComponent({ tasks, deleteTask, editeTask, categoryClicked }) {
   const sortedTasks = tasks.sort(
     (a, b) => new Date(a.deadlinedate) - new Date(b.deadlinedate)
   );
-
+  let dateForClassification = "";
   return (
     <div className="min-w-96 w-full p-5 m-2 bg-zinc-50 rounded-lg ">
       <div className="flex justify-between">
@@ -88,56 +88,65 @@ function TaskListComponent({ tasks, deleteTask, editeTask, categoryClicked }) {
           onClick={flexTypeHandler}
         />
       </div>
-      <div className="flex">
-        <div
-          className={`${sortedTasks.length === 0 ? "hidden" : ""} flex w-full`}
-        >
-          <hr class={` border-t-2 border-gray-300 w-10 ml-4 my-4`} />
-          <span className=" text-gray-400">
-            {tasks.length > 0 ? tasks[0].deadlinedate : ""}
-          </span>
-          <hr class="border-t-2 border-gray-300 w-full mr-4  my-4" />
-        </div>
-      </div>
       <p className={` ${sortedTasks.length === 0 ? "" : "hidden"}`}>
         {textForEmptyList}
       </p>
-      <ul className=" flex flex-wrap gap-4 ">
+
+      <ul className=" flex flex-col gap-4 ">
         {sortedTasks.map((task) => (
-          <li
-            key={task.key}
-            className={`flex p-4 rounded-lg shadow-md ${liTagClassAdd} ${
-              task.priority === "default" && colors[0]
-            } ${task.priority === "low" && colors[1]} ${
-              task.priority === "mid" && colors[2]
-            } ${task.priority === "high" && colors[3]}`}
-          >
-            <div className="flex-grow overflow-hidden w-9/12">
-              <h3 className="text-sm font-semibold mb-1 truncate">
-                {task.title}
-                {task.deadlinedate && " _ "}
-                <span style={{ unicodeBidi: "embed", direction: "ltr" }}>
-                  {task.deadlinedate}
-                </span>
-                {task.deadlinetime && " _ "}
-                {task.deadlinetime}
-              </h3>
-              <p className="text-gray-600 text-sm break-words truncate">
-                توضیحات: {task.description}
-              </p>
+          <div>
+            <div className="flex">
+              <div
+                className={`
+                ${task.deadlinedate > dateForClassification ? "" : "hidden"}
+                 flex w-full`}
+              >
+                <hr class={` border-t-2 border-gray-300 w-10 ml-4 my-4`} />
+                <span className=" text-gray-400">{task.deadlinedate}</span>
+                <hr class="border-t-2 border-gray-300 w-full mr-4  my-4" />
+              </div>
             </div>
-            <div className="flex gap-2">
-              <ButtonComponent
-                icon="trash"
-                onClick={() => deleteTask(task.id)}
-              />
-              <ButtonComponent icon="edit" onClick={() => editeTask(task.id)} />
-              <ButtonComponent
-                icon="done"
-                onClick={() => deleteTask(task.id)}
-              />
-            </div>
-          </li>
+            <p className="hidden">
+              {(dateForClassification = task.deadlinedate)}
+            </p>
+            <li
+              key={task.key}
+              className={`flex p-4 rounded-lg shadow-md ${liTagClassAdd} ${
+                task.priority === "default" && colors[0]
+              } ${task.priority === "low" && colors[1]} ${
+                task.priority === "mid" && colors[2]
+              } ${task.priority === "high" && colors[3]}`}
+            >
+              <div className="flex-grow overflow-hidden w-9/12">
+                <h3 className="text-sm font-semibold mb-1 truncate">
+                  {task.title}
+                  {task.deadlinedate && " _ "}
+                  <span style={{ unicodeBidi: "embed", direction: "ltr" }}>
+                    {task.deadlinedate}
+                  </span>
+                  {task.deadlinetime && " _ "}
+                  {task.deadlinetime}
+                </h3>
+                <p className="text-gray-600 text-sm break-words truncate">
+                  توضیحات: {task.description}
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <ButtonComponent
+                  icon="trash"
+                  onClick={() => deleteTask(task.id)}
+                />
+                <ButtonComponent
+                  icon="edit"
+                  onClick={() => editTask(task.id)}
+                />
+                <ButtonComponent
+                  icon="done"
+                  onClick={() => deleteTask(task.id)}
+                />
+              </div>
+            </li>
+          </div>
         ))}
       </ul>
     </div>

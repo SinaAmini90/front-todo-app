@@ -176,7 +176,7 @@ function App() {
               <TaskListComponent
                 tasks={customTasks}
                 deleteTask={handleDeleteTask}
-                editeTask={handelEditTask}
+                editTask={handelEditTask}
                 categoryClicked={categoryClicked}
               />
               <div className={displayForm ? "" : " hidden"}>
