@@ -72,8 +72,8 @@ function TaskListComponent({ tasks, deleteTask, editTask, categoryClicked }) {
   };
   //for two type of layout for tasks list
   let liTagClassAdd = liTagClass
-    ? " w-52 h-52 flex-col "
-    : " max-w-2xl w-full items-center";
+    ? " max-w-2xl w-full items-center"
+    : " w-fit max-w-1/2 h-fit min-h-28 flex-col ";
 
   const sortedTasks = tasks.sort(
     (a, b) => new Date(a.deadlinedate) - new Date(b.deadlinedate)
@@ -95,7 +95,7 @@ function TaskListComponent({ tasks, deleteTask, editTask, categoryClicked }) {
       <ul className=" flex flex-col gap-4 ">
         {sortedTasks.map((task) => (
           <div>
-            <div className="flex">
+            <div>
               <div
                 className={`
                 ${task.deadlinedate > dateForClassification ? "" : "hidden"}
@@ -117,7 +117,7 @@ function TaskListComponent({ tasks, deleteTask, editTask, categoryClicked }) {
                 task.priority === "mid" && colors[2]
               } ${task.priority === "high" && colors[3]}`}
             >
-              <div className="flex-grow overflow-hidden w-9/12">
+              <div className="flex-grow overflow-hidden w-full">
                 <h3 className="text-sm font-semibold mb-1 truncate">
                   {task.title}
                   {task.deadlinedate && " _ "}
