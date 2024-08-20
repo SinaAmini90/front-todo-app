@@ -48,16 +48,21 @@ function NavBarComponent({ isSignin }) {
       username: username,
       password: password,
     };
-    const token = await signin(signinData);
-    const decodedToken = jwtDecode(token);
-    const dataToken = {
-      id: decodedToken.id,
-      name: decodedToken.name,
-      username: decodedToken.username,
-      jwt: token,
-    };
-    localStorage.setItem("token", JSON.stringify(dataToken));
-    window.location.reload();
+    try {
+      const token = await signin(signinData);
+      const decodedToken = jwtDecode(token);
+      const dataToken = {
+        id: decodedToken.id,
+        name: decodedToken.name,
+        username: decodedToken.username,
+        jwt: token,
+      };
+      localStorage.setItem("token", JSON.stringify(dataToken));
+      window.location.reload();
+    } catch (error) {
+      setSigninModalText("نام کاربری یا رمز عبور اشتباه است");
+      console.error("Error loginig user in:", error);
+    }
   };
 
   const signoutHandler = async () => {
@@ -68,8 +73,11 @@ function NavBarComponent({ isSignin }) {
   };
 
   const registerHandler = async () => {
-    if (!password === repeatPassword) {
-      setSigninModalText("رمز را به صورت صحیح وارد کنید.");
+    if (phonenumber.length !== 11) {
+      return setSigninModalText("شماره تماس را به صورت صحیح وارد کنید.");
+    }
+    if (password !== repeatPassword) {
+      return setSigninModalText("رمز را به صورت صحیح وارد کنید.");
     }
     setSigninModalText("در حال بررسی اطلاعات...");
 
@@ -81,12 +89,19 @@ function NavBarComponent({ isSignin }) {
       username: username,
       password: password,
     };
-    const response = await createUser(regData);
-    console.log(response.success);
-    if (response.success) {
-      signinHandler();
+    try {
+      const response = await createUser(regData);
+      if (response.success) {
+        signinHandler();
+      } else {
+        setSigninModalText("ثبت نام ناموفق بود، لطفاً دوباره تلاش کنید.");
+      }
+    } catch (error) {
+      setSigninModalText("خطا در ثبت نام، لطفاً دوباره تلاش کنید.");
+      console.error("Error registering user:", error);
     }
   };
+
   return (
     <div className=" flex justify-between py-3 px-10 mx-2 bg-zinc-100 rounded-lg ">
       {/* -----------------navbar------------------ */}

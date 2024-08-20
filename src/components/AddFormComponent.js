@@ -29,6 +29,7 @@ function AddFormComponent({
   const [priority, setPriority] = useState("default");
   const [category, setCategory] = useState("");
   const [taskEditDate, setTaskEditDate] = useState("");
+  const [addFormText, setAddFormText] = useState("");
 
   useEffect(() => {
     if (taskForEdit) {
@@ -93,48 +94,57 @@ function AddFormComponent({
     setDisplayForm();
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     deadLineTime === "00:00" && setDeadLineTime(() => "");
     // reminderTime === "00:00" && setReminderTime(() => ""); (**about reminder time ** develop later**)
-    if (taskForEdit) {
-      if (title.trim()) {
-        const editedTask = {
-          key: taskForEdit.id,
-          id: taskForEdit.id,
-          title: title,
-          description: description,
-          priority: priority,
-          category: category,
-          deadlinedate: deadLineDate,
-          deadlinetime: deadLineTime,
-        };
-        onEditTask(editedTask);
+    try {
+      if (taskForEdit) {
+        if (title.trim()) {
+          setAddFormText("در حال بررسی اطلاعات...");
+          const editedTask = {
+            key: taskForEdit.id,
+            id: taskForEdit.id,
+            title: title,
+            description: description,
+            priority: priority,
+            category: category,
+            deadlinedate: deadLineDate,
+            deadlinetime: deadLineTime,
+          };
+          await onEditTask(editedTask);
+          setAddFormText("");
+        }
+      } else {
+        if (title.trim()) {
+          setAddFormText("در حال بررسی اطلاعات...");
+          const id = Math.floor(Date.now() * Math.random());
+          const newTask = {
+            key: id,
+            id: id,
+            title: title,
+            // `${title}${deadLineDate && " _ "}${deadLineDate}${
+            //   deadLineTime && " _ "
+            // }${deadLineTime}`,
+            description: description,
+            // `${description}${
+            //   reminderTime && "_ یادآوری: "
+            // }${reminderTime} ${reminderTime && " قبل"}`,
+            priority: priority,
+            category: category,
+            deadlinedate: deadLineDate,
+            deadlinetime: deadLineTime,
+            // reminderTime: reminderTime, (**about reminder time ** develop later**)
+          };
+          await onAddTask(newTask);
+          setAddFormText("");
+        }
       }
-    } else {
-      if (title.trim()) {
-        const id = Math.floor(Date.now() * Math.random());
-        const newTask = {
-          key: id,
-          id: id,
-          title: title,
-          // `${title}${deadLineDate && " _ "}${deadLineDate}${
-          //   deadLineTime && " _ "
-          // }${deadLineTime}`,
-          description: description,
-          // `${description}${
-          //   reminderTime && "_ یادآوری: "
-          // }${reminderTime} ${reminderTime && " قبل"}`,
-          priority: priority,
-          category: category,
-          deadlinedate: deadLineDate,
-          deadlinetime: deadLineTime,
-          // reminderTime: reminderTime, (**about reminder time ** develop later**)
-        };
-        onAddTask(newTask);
-      }
+      setDisplayForm();
+    } catch (error) {
+      console.error("Error during task submission or task editing:", error);
+      setAddFormText("خطایی رخ داد. لطفاً دوباره تلاش کنید.");
     }
-    setDisplayForm();
   };
 
   const onChangeCategory = (event) => {
@@ -342,6 +352,9 @@ function AddFormComponent({
                 } pr-1 pt-3 text-sm text-red-600`}
               >
                 توجه: پرکردن عنوان و انتخاب تاریخ الزامی است.
+              </p>
+              <p className={` ${addFormText ? "" : "hidden"} pr-1 pt-3 `}>
+                {addFormText}
               </p>
             </div>
           </div>
