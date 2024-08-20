@@ -1,4 +1,5 @@
 import "./App.css";
+import jalaali from "jalaali-js";
 import React, { useState, useEffect } from "react";
 import { getTasks, deleteTask, createTask, updateTask } from "./api/taskAPI.js";
 import { SigninContext } from "./store/auth-context.js";
@@ -31,8 +32,16 @@ function App() {
         setCategoryClicked(context);
         break;
       case "today tasks":
-        const today = new Date().toISOString().split("T")[0];
-        setCustomTasks(tasks.filter((task) => task.deadlineDate === today));
+        const today = new Date();
+        const jDate = jalaali.toJalaali(today);
+        const formattedJDate = `${jDate.jy}-${String(jDate.jm).padStart(
+          2,
+          "0"
+        )}-${String(jDate.jd).padStart(2, "0")}`;
+        console.log("today", formattedJDate);
+        setCustomTasks(
+          tasks.filter((task) => task.deadlinedate === formattedJDate)
+        );
         setCategoryClicked(context);
         break;
       case "all tasks":
